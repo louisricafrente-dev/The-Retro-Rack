@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="./images/logoretro.png" type="image/x-icon">
+  <title>Admin Orders - The Retro Rack</title>
+  <link rel="stylesheet" href="./css/styles.css">
+  <link rel="stylesheet" href="./css/admin_order.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    .order-status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 4px;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .status-Pending { background: #e17055; }
+    .status-Processing { background: #636e72; }
+    .status-Shipped { background: #0984e3; }
+    .status-Delivered { background: #00b894; }
+    .status-Cancelled { background: #d63031; }
+
+    .filter-btn-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    .filter-btn {
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid #ccc;
+      background: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-btn.active, .filter-btn:hover {
+      background: var(--orange);
+      color: #fff;
+      border-color: var(--orange);
+    }
+  </style>
+</head>
+<body>
+  <!-- Admin Top Bar -->
+  <header class="top-nav" id="admin-header">
+    <div class="container" style="display:flex; justify-content:space-between; align-items:center;">
+      <div class="welcome">
+        <span id="currentDateTime">Loading clock...</span>
+      </div>
+      <ul class="nav-links" style="display:flex; gap:15px; align-items:center;">
+        <li><a href="index.html" style="color:var(--orange); font-weight:600;"><i class="fas fa-store"></i> Customer Storefront</a></li>
+        <li><a href="#" id="logoutLink"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- Logout Confirmation Modal -->
+  <div id="logoutModal" class="modal">
+    <div class="modal-content">
+      <span class="close-button">&times;</span>
+      <h2>Confirm Logout</h2>
+      <p>Are you sure you want to log out of the admin panel?</p>
+      <div class="modal-buttons">
+        <button id="cancelLogout" class="btn cancel-btn">Cancel</button>
+        <a href="#" id="confirmLogout" class="btn logout-btn">Logout</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Bar -->
+  <nav class="navigation">
+    <div class="nav-center container d-flex">
+      <a href="admin_dashboard.html" class="logo">Retro Rack Shop Admin</a>
+      <ul class="nav-list d-flex">
+        <li class="nav-item"><a href="admin_dashboard.html" class="nav-link">Dashboard</a></li>
+        <li class="nav-item"><a href="admin_products.html" class="nav-link">Products</a></li>
+        <li class="nav-item"><a href="admin_orders.html" class="nav-link active">Orders</a></li>
+        <li class="nav-item"><a href="admin_users.html" class="nav-link">Users</a></li>
+        <li class="nav-item"><a href="admin_report.html" class="nav-link">Reports</a></li>
+        <li class="nav-item"><a href="admin_settings.html" class="nav-link">Settings</a></li>
+      </ul>
+      <div class="hamburger">
+        <i class="fas fa-bars"></i>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <section class="section main-admin">
+    <div class="container">
+      <div class="title" style="margin-bottom: 1.5rem;">
+        <h1>Customer Orders Management</h1>
+        <p style="color:#666; font-size:14px;">Review orders, update fulfillment statuses, and view delivery details</p>
+      </div>
+
+      <!-- Filters -->
+      <div class="filter-btn-group">
+        <button class="filter-btn active" data-status="All">All Orders</button>
+        <button class="filter-btn" data-status="Pending">Pending</button>
+        <button class="filter-btn" data-status="Processing">Processing</button>
+        <button class="filter-btn" data-status="Shipped">Shipped</button>
+        <button class="filter-btn" data-status="Delivered">Delivered</button>
+        <button class="filter-btn" data-status="Cancelled">Cancelled</button>
+      </div>
+
+      <!-- Orders Table -->
+      <div style="background:#fff; border-radius:8px; border:1px solid #e0ded7; overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Items Summary</th>
+              <th>Total Amount</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="orders-table-body">
+            <!-- Rendered via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Status Update Modal -->
+  <div id="statusModal" class="modal">
+    <div class="modal-content" style="max-width: 450px;">
+      <span class="close-button" id="closeStatusModal">&times;</span>
+      <h2>Update Order Status</h2>
+      <p style="font-size:13px; color:#666; margin-bottom: 15px;" id="status-modal-sub">
+        Changing status for order #
+      </p>
+
+      <form id="statusUpdateForm">
+        <input type="hidden" id="status-order-id" />
+        <div style="margin-bottom: 15px;">
+          <label style="display:block; font-size:13px; font-weight:600; margin-bottom:5px;">Select Fulfillment Status</label>
+          <select id="new-status-select" style="width:100%; padding:8px 10px; border:1px solid #ccc; border-radius:4px; font-size:14px;">
+            <option value="Pending">Pending (Payment verification / Queue)</option>
+            <option value="Processing">Processing (Packing in Warehouse)</option>
+            <option value="Shipped">Shipped (In Transit with Courier)</option>
+            <option value="Delivered">Delivered (Completed Delivery)</option>
+            <option value="Cancelled">Cancelled (Order Voided)</option>
+          </select>
+        </div>
+        <button type="submit" class="btn" style="width:100%; background:var(--orange); color:#fff; font-weight:600; padding:10px;">
+          Save Order Status
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="./js/retroStore.js"></script>
+  <script src="./js/demoBadge.js"></script>
+  <script src="./js/adminHelper.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      if (!window.RetroStore) return;
+
+      const tbody = document.getElementById('orders-table-body');
+      const statusModal = document.getElementById('statusModal');
+      const closeBtn = document.getElementById('closeStatusModal');
+      const filterBtns = document.querySelectorAll('.filter-btn');
+
+      let currentStatusFilter = 'All';
+
+      function renderOrders() {
+        let orders = window.RetroStore.getOrders();
+        if (currentStatusFilter !== 'All') {
+          orders = orders.filter(o => o.status.toLowerCase() === currentStatusFilter.toLowerCase());
+        }
+
+        if (orders.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:2rem;">No orders match this filter.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = orders.map(o => {
+          const itemsSummary = (o.items || []).map(i => `${i.name} (x${i.quantity})`).join(', ') || 'Vintage Apparel';
+          return `
+            <tr>
+              <td><strong>#${o.id}</strong></td>
+              <td>${o.user_name || 'Guest Customer'}</td>
+              <td style="max-width:280px; font-size:13px; color:#555;" title="${itemsSummary}">
+                ${itemsSummary.length > 50 ? itemsSummary.substring(0, 50) + '...' : itemsSummary}
+              </td>
+              <td><strong>₱${Number(o.total_amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}</strong></td>
+              <td>${o.order_date.split(' ')[0]}</td>
+              <td>
+                <span class="order-status-badge status-${o.status}">
+                  ${o.status}
+                </span>
+              </td>
+              <td>
+                <button class="btn update-status-btn" data-id="${o.id}" data-status="${o.status}" style="padding:5px 12px; font-size:12px; background:#0984e3; color:#fff; border:none; border-radius:4px; cursor:pointer;">
+                  Update Status
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+
+        attachOrderListeners();
+      }
+
+      function attachOrderListeners() {
+        document.querySelectorAll('.update-status-btn').forEach(btn => {
+          btn.addEventListener('click', function () {
+            const id = this.getAttribute('data-id');
+            const status = this.getAttribute('data-status');
+            document.getElementById('status-order-id').value = id;
+            document.getElementById('status-modal-sub').textContent = `Changing status for Order #${id}`;
+            document.getElementById('new-status-select').value = status;
+            statusModal.style.display = 'block';
+          });
+        });
+      }
+
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', function () {
+          filterBtns.forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          currentStatusFilter = this.getAttribute('data-status');
+          renderOrders();
+        });
+      });
+
+      closeBtn.addEventListener('click', () => { statusModal.style.display = 'none'; });
+      window.addEventListener('click', (e) => { if (e.target === statusModal) statusModal.style.display = 'none'; });
+
+      document.getElementById('statusUpdateForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const id = document.getElementById('status-order-id').value;
+        const newStatus = document.getElementById('new-status-select').value;
+
+        window.RetroStore.updateOrderStatus(id, newStatus);
+        if (window.showRetroToast) window.showRetroToast(`Order #${id} updated to "${newStatus}"!`);
+        statusModal.style.display = 'none';
+        renderOrders();
+      });
+
+      renderOrders();
+    });
+  </script>
+</body>
+</html>

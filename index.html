@@ -4,46 +4,75 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="./images/logoretro.png" type="image/x-icon">
   
     <!-- Boxicons -->
-    <link
-      href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css"
-      rel="stylesheet"
-    />
+    <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet" />
     <!-- Glide js -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.4.1/css/glide.core.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.4.1/css/glide.theme.css">
     <!-- Custom StyleSheet -->
     <link rel="stylesheet" href="./css/styles.css" />
-    <title>Ecommerce Website</title>
+    <link rel="stylesheet" href="./css/index.css" />
+    <title>The Retro Rack - Vintage & Streetwear Apparel</title>
   </head>
   <body>
-    <!-- Header -->
-    <header class="header" id="header">
-      <!-- Top Nav -->
-      <div class="top-nav">
-        <div class="container d-flex">
-          <p>Order Online Or Call Us:(+91) 8081886430,7376550891</p>
-          <ul class="d-flex">
-            <li><a href="about.html">About Us</a></li>
-            <li><a href="contact.html">FAQ</a></li>
-            <li><a href="contact.html">Contact</a></li>
-          </ul>
-        </div>
+    <!-- Top Nav -->
+    <div class="top-nav">
+      <div class="container d-flex">
+        <p>Order Online Or Call Us: (+63) 907 343 4119</p>
+        <ul class="d-flex">
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="#" id="adminLink">Admin</a></li>
+        </ul>
       </div>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div id="adminLoginModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>Admin Management Login</h2>
+        <p style="font-size: 13px; color: #666; margin-bottom: 15px;">
+          Access the store administration portal to manage products, orders, users, and reports.
+        </p>
+
+        <form id="adminLoginForm">
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label for="admin-username" style="display:block; margin-bottom: 5px;">Username</label>
+            <input type="text" id="admin-username" name="username" class="form-input" value="admin" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;" required>
+          </div>
+          <div class="form-group" style="margin-bottom: 15px;">
+            <label for="admin-password" style="display:block; margin-bottom: 5px;">Password</label>
+            <input type="password" id="admin-password" name="password" class="form-input" value="password123" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;" required>
+          </div>
+          <button type="submit" class="btn logout-btn" style="width:100%; margin-bottom: 10px;">Login to Admin</button>
+          
+          <button type="button" id="oneClickAdminBtn" class="btn" style="width:100%; background: #ff7700; color: #fff; font-weight: 600;">
+            ⚡ 1-Click Demo Login as Admin
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="header" id="header">
       <div class="navigation">
         <div class="nav-center container d-flex">
-        <a href="index.html" class="logo"><h1>The Mart</h1></a>
+          <a href="index.html" class="logo">
+            <h1>The Retro Rack</h1>
+          </a>
 
           <ul class="nav-list d-flex">
             <li class="nav-item">
-              <a href="index.php" class="nav-link">Home</a>
+              <a href="index.html" class="nav-link active">Home</a>
             </li>
             <li class="nav-item">
               <a href="product.html" class="nav-link">Shop</a>
             </li>
             <li class="nav-item">
-            <a href="terms.xml" class="nav-link">Terms</a>
+              <a href="terms.html" class="nav-link">Terms</a>
             </li>
             <li class="nav-item">
               <a href="about.html" class="nav-link">About</a>
@@ -51,22 +80,34 @@
             <li class="nav-item">
               <a href="contact.html" class="nav-link">Contact</a>
             </li>
+            <li class="nav-item" id="welcome-user-container"></li>
           </ul>
 
           <div class="icons d-flex">
-            <a href="login.html" class="icon">
+            <a href="loginview.html" class="icon" id="userProfileLink" title="Account / Profile">
               <i class="bx bx-user"></i>
             </a>
-            <a href="logout.php" class="icon" id="logoutIcon">
-              <i class="bx bx-log-out"></i>
-            </a>
-            <div class="icon" >
-              <i class="bx bx-heart"></i>
-              <span class="d-flex">0</span>
+
+            <!-- Search Icon and Popup -->
+            <div class="search-container">
+              <a href="#" class="icon" id="searchIcon" title="Search Store">
+                <i class="bx bx-search"></i>
+              </a>
+              <div class="search-popup" id="searchPopup">
+                <form action="product.html" method="get">
+                  <input type="text" name="search_query" placeholder="Search products..." required>
+                  <button type="submit">Go</button>
+                </form>
+              </div>
             </div>
-            <a href="cart.html" class="icon">
+
+            <a href="cart.html" class="icon" title="View Cart">
               <i class="bx bx-cart"></i>
-              <span class="d-flex">0</span>
+              <span id="cart-counter" class="d-flex cart-count">0</span>
+            </a>
+
+            <a href="#" class="icon" id="logoutIcon" title="Logout">
+              <i class="bx bx-log-out"></i>
             </a>
           </div>
 
@@ -76,63 +117,64 @@
         </div>
       </div>
 
-    <div class="hero">
-      <div class="glide" id="glide_1">
-        <div class="glide__track" data-glide-el="track">
-          <ul class="glide__slides">
-            <li class="glide__slide">
-              <div class="center">
-                <div class="left">
-                  <span class="">New Inspiration 2022</span>
-                  <h1 class="">NEW COLLECTION!</h1>
-                  <p>Trending from men's and women's  style collection</p>
-                  <a href="product.html" class="hero-btn">SHOP NOW</a>
+      <!-- Hero Slider -->
+      <div class="hero">
+        <div class="glide" id="glide_1">
+          <div class="glide__track" data-glide-el="track">
+            <ul class="glide__slides">
+              <li class="glide__slide">
+                <div class="center">
+                  <div class="left">
+                    <span>Authentic Vintage Curation</span>
+                    <h1>TIMELESS STYLE</h1>
+                    <p>Handpicked 80s, 90s, and Y2K streetwear & retro essentials</p>
+                    <a href="product.html" class="hero-btn">EXPLORE SHOP</a>
+                  </div>
+                  <div class="right">
+                    <img class="img1" src="./images/hero-1.png" alt="Retro Streetwear">
+                  </div>
                 </div>
-                <div class="right">
-                    <img class="img1" src="./images/hero-1.png" alt="">
+              </li>
+              <li class="glide__slide">
+                <div class="center">
+                  <div class="left">
+                    <span>Autumn 2026 Collection</span>
+                    <h1>THE PERFECT MATCH</h1>
+                    <p>Heavyweight corduroy, selvedge denim & classic oversized tees</p>
+                    <a href="product.html" class="hero-btn">SHOP NOW</a>
+                  </div>
+                  <div class="right">
+                    <img class="img2" src="./images/hero-2.png" alt="Vintage Apparel">
+                  </div>
                 </div>
-              </div>
-            </li>
-            <li class="glide__slide">
-              <div class="center">
-                <div class="left">
-                  <span>New Inspiration 2022</span>
-                  <h1>THE PERFECT MATCH!</h1>
-                  <p>Trending from men's and women's  style collection</p>
-                  <a href="product.html" class="hero-btn">SHOP NOW</a>
-                </div>
-                <div class="right">
-                  <img class="img2" src="./images/hero-2.png" alt="">
-                </div>
-              </div>
-            </li>
-          </ul>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
-    </div>
     </header>
 
     <!-- Categories Section -->
     <section class="section category">
       <div class="cat-center">
-        <div class="cat">
-          <img src="./images/cat3.jpg" alt="" />
+        <a href="product.html?category=Women's+Wear" class="cat">
+          <img src="./images/cat3.jpg" alt="Women's Wear" />
           <div>
             <p>WOMEN'S WEAR</p>
           </div>
-        </div>
-        <div class="cat">
-          <img src="./images/cat2.jpg" alt="" />
+        </a>
+        <a href="product.html?category=Accessories" class="cat">
+          <img src="./images/cat2.jpg" alt="Accessories" />
           <div>
             <p>ACCESSORIES</p>
           </div>
-        </div>
-        <div class="cat">
-          <img src="./images/cat1.jpg" alt="" />
+        </a>
+        <a href="product.html?category=Men's+Wear" class="cat">
+          <img src="./images/cat1.jpg" alt="Men's Wear" />
           <div>
             <p>MEN'S WEAR</p>
           </div>
-        </div>
+        </a>
       </div>
     </section>
 
@@ -140,273 +182,51 @@
     <section class="section new-arrival">
       <div class="title">
         <h1>NEW ARRIVALS</h1>
-        <p>All the latest picked from designer of our store</p>
+        <p>Latest authentic retro pieces cataloged in our store</p>
       </div>
 
-      <div class="product-center">
-        <div class="product-item">
-          <div class="overlay">
-            <a href="productDetails.html" class="product-thumb">
-              <img src="./images/product-1.jpg" alt="" />
-            </a>
-          </div>
-          <div class="product-info">
-            <span>MEN'S CLOTHES</span>
-            <a href="productDetails.html">Quis Nostrud Exercitation</a>
-            <h4>$700</h4>
-          </div>
-          <ul class="icons">
-            <li><i class="bx bx-heart"></i></li>
-            <li><i class="bx bx-search"></i></li>
-            <li><i class="bx bx-cart"></i></li>
-          </ul>
-        </div>
-        <div class="product-item">
-          <div class="overlay">
-            <a href="" class="product-thumb">
-              <img src="./images/product-3.jpg" alt="" />
-            </a>
-            <span class="discount">50%</span>
-          </div>
-
-          <div class="product-info">
-            <span>MEN'S CLOTHES</span>
-            <a href="">Sonata White Men’s Shirt</a>
-            <h4>$800</h4>
-          </div>
-          <ul class="icons">
-            <li><i class="bx bx-heart"></i></li>
-            <li><i class="bx bx-search"></i></li>
-            <li><i class="bx bx-cart"></i></li>
-          </ul>
-        </div>
-        <div class="product-item">
-          <div class="overlay">
-            <a href="" class="product-thumb">
-              <img src="./images/product-2.jpg" alt="" />
-            </a>
-          </div>
-          <div class="product-info">
-            <span>MEN'S CLOTHES</span>
-            <a href="">Concepts Solid Pink Men’s Polo</a>
-            <h4>$150</h4>
-          </div>
-          <ul class="icons">
-            <li><i class="bx bx-heart"></i></li>
-            <li><i class="bx bx-search"></i></li>
-            <li><i class="bx bx-cart"></i></li>
-          </ul>
-        </div>
-        <div class="product-item">
-          <div class="overlay">
-            <a href="" class="product-thumb">
-              <img src="./images/product-4.jpg" alt="" />
-            </a>
-            <span class="discount">50%</span>
-          </div>
-          <div class="product-info">
-            <span>MEN'S CLOTHES</span>
-            <a href="">Edor do eiusmod tempor</a>
-            <h4>$900</h4>
-          </div>
-          <ul class="icons">
-            <li><i class="bx bx-heart"></i></li>
-            <li><i class="bx bx-search"></i></li>
-            <li><i class="bx bx-cart"></i></li>
-          </ul>
-        </div>
-        <div class="product-item">
-          <div class="overlay">
-            <a href="" class="product-thumb">
-              <img src="./images/product-5.jpg" alt="" />
-            </a>
-          </div>
-          <div class="product-info">
-            <span>MEN'S CLOTHES</span>
-            <a href="">Edor do eiusmod tempor</a>
-            <h4>$100</h4>
-          </div>
-          <ul class="icons">
-            <li><i class="bx bx-heart"></i></li>
-            <li><i class="bx bx-search"></i></li>
-            <li><i class="bx bx-cart"></i></li>
-          </ul>
-        </div>
-        <div class="product-item">
-          <div class="overlay">
-            <a href="" class="product-thumb">
-              <img src="./images/product-6.jpg" alt="" />
-            </a>
-          </div>
-          <div class="product-info">
-            <span>MEN'S CLOTHES</span>
-            <a href="">Edor do eiusmod tempor</a>
-            <h4>$500</h4>
-          </div>
-          <ul class="icons">
-            <li><i class="bx bx-heart"></i></li>
-            <li><i class="bx bx-search"></i></li>
-            <li><i class="bx bx-cart"></i></li>
-          </ul>
-        </div>
-        <div class="product-item">
-          <div class="overlay">
-            <a href="" class="product-thumb">
-              <img src="./images/product-7.jpg" alt="" />
-            </a>
-            <span class="discount">50%</span>
-          </div>
-          <div class="product-info">
-            <span>MEN'S CLOTHES</span>
-            <a href="">Edor do eiusmod tempor</a>
-            <h4>$200</h4>
-          </div>
-          <ul class="icons">
-            <li><i class="bx bx-heart"></i></li>
-            <li><i class="bx bx-search"></i></li>
-            <li><i class="bx bx-cart"></i></li>
-          </ul>
-        </div>
-        <div class="product-item">
-          <div class="overlay">
-            <a href="" class="product-thumb">
-              <img src="./images/product-2.jpg" alt="" />
-            </a>
-          </div>
-          <div class="product-info">
-            <span>MEN'S CLOTHES</span>
-            <a href="">Edor do eiusmod tempor</a>
-            <h4>$560</h4>
-          </div>
-          <ul class="icons">
-            <li><i class="bx bx-heart"></i></li>
-            <li><i class="bx bx-search"></i></li>
-            <li><i class="bx bx-cart"></i></li>
-          </ul>
-        </div>
+      <div class="product-center" id="new-arrivals-grid">
+        <!-- Rendered dynamically via retroStore.js -->
       </div>
     </section>
 
-
-    <!-- Promo -->
-
+    <!-- Promo Banner -->
     <section class="section banner">
-<div class="left">
-  <span class="trend">Trend Design</span>
-  <h1>New Collection 2022</h1>
-  <p>New Arrival <span class="color">Sale 50% OFF</span> Limited Time Offer</p>
-  <a href="product.html" class="btn btn-1">Discover Now</a>
-</div>
-<div class="right">
-  <img src="./images/banner.png" alt="">
-</div>
+      <div class="left">
+        <span class="trend">Limited Retro Edition</span>
+        <h1>MID-SEASON ARCHIVE SALE</h1>
+        <p>Use code <strong style="color:var(--orange);">RETRO20</strong> at checkout for 20% discount on all items.</p>
+        <a href="product.html" class="btn btn-1">Shop The Archive</a>
+      </div>
+      <div class="right">
+        <img src="./images/banner.png" alt="Promo Banner" />
+      </div>
     </section>
 
-
-
-
-    <!-- Featured -->
-  
+    <!-- Featured Products -->
     <section class="section new-arrival">
       <div class="title">
-        <h1>Featured</h1>
-        <p>All the latest picked from designer of our store</p>
+        <h1>FEATURED PRODUCTS</h1>
+        <p>Curated favorites from our permanent vintage collection</p>
       </div>
 
-      <div class="product-center">
-        <div class="product-item">
-          <div class="overlay">
-            <a href="" class="product-thumb">
-              <img src="./images/product-7.jpg" alt="" />
-            </a>
-            <span class="discount">50%</span>
-          </div>
-          <div class="product-info">
-            <span>MEN'S CLOTHES</span>
-            <a href="">Quis Nostrud Exercitation</a>
-            <h4>$700</h4>
-          </div>
-          <ul class="icons">
-            <li><i class="bx bx-heart"></i></li>
-            <li><i class="bx bx-search"></i></li>
-            <li><i class="bx bx-cart"></i></li>
-          </ul>
-        </div>
-        <div class="product-item">
-          <div class="overlay">
-            <a href="" class="product-thumb">
-              <img src="./images/product-4.jpg" alt="" />
-            </a>
-          </div>
-
-          <div class="product-info">
-            <span>MEN'S CLOTHES</span>
-            <a href="">Sonata White Men’s Shirt</a>
-            <h4>$800</h4>
-          </div>
-          <ul class="icons">
-            <li><i class="bx bx-heart"></i></li>
-            <li><i class="bx bx-search"></i></li>
-            <li><i class="bx bx-cart"></i></li>
-          </ul>
-        </div>
-        <div class="product-item">
-          <div class="overlay">
-            <a href="" class="product-thumb">
-              <img src="./images/product-1.jpg" alt="" />
-            </a>
-            <span class="discount">40%</span>
-          </div>
-          <div class="product-info">
-            <span>MEN'S CLOTHES</span>
-            <a href="">Concepts Solid Pink Men’s Polo</a>
-            <h4>$150</h4>
-          </div>
-          <ul class="icons">
-            <li><i class="bx bx-heart"></i></li>
-            <li><i class="bx bx-search"></i></li>
-            <li><i class="bx bx-cart"></i></li>
-          </ul>
-        </div>
-        <div class="product-item">
-          <div class="overlay">
-            <a href="" class="product-thumb">
-              <img src="./images/product-6.jpg" alt="" />
-            </a>
-          </div>
-          <div class="product-info">
-            <span>MEN'S CLOTHES</span>
-            <a href="">Edor do eiusmod tempor</a>
-            <h4>$900</h4>
-          </div>
-          <ul class="icons">
-            <li><i class="bx bx-heart"></i></li>
-            <li><i class="bx bx-search"></i></li>
-            <li><i class="bx bx-cart"></i></li>
-          </ul>
-        </div>
-
-    </section>
-
-    <!-- Contact -->
-    <section class="section contact">
-      <div class="row">
-        <div class="col">
-          <h2>EXCELLENT SUPPORT</h2>
-          <p>We love our customers and they can reach us any time
-          of day we will be at your service 24/7</p>
-          <a href="contact.html" class="btn btn-1">Contact</a>
-        </div>
-        <div class="col">
-          <form action="">
-            <div>
-              <input type="email" placeholder="Email Address">
-            <a href="">Send</a>
-            </div>
-          </form>
-        </div>
+      <div class="product-center" id="featured-products-grid">
+        <!-- Rendered dynamically via retroStore.js -->
       </div>
     </section>
+
+    <!-- Logout Confirmation Modal -->
+    <div id="logoutModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>Confirm Logout</h2>
+        <p>Are you sure you want to end your demo session?</p>
+        <div class="modal-buttons" style="margin-top: 15px; display:flex; gap: 10px; justify-content: flex-end;">
+          <button id="cancelLogout" class="btn cancel-btn">Cancel</button>
+          <a href="#" id="confirmLogout" class="btn logout-btn">Logout</a>
+        </div>
+      </div>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">
@@ -415,121 +235,95 @@
           <h4>INFORMATION</h4>
           <a href="about.html">About us</a>
           <a href="contact.html">Contact Us</a>
-          <a href="">Term & Conditions</a>
-          <a href="">Shipping Guide</a>
+          <a href="terms.html">Terms & Conditions</a>
+          <a href="product.html">Catalog</a>
         </div>
         <div class="col d-flex">
-          <h4>USEFUL LINK</h4>
-          <a href="">Online Store</a>
-          <a href="">Customer Services</a>
-          <a href="">Promotion</a>
-          <a href="">Top Brands</a>
+          <h4>CUSTOMER PORTAL</h4>
+          <a href="loginview.html">My Account</a>
+          <a href="cart.html">Shopping Cart</a>
+          <a href="order_history.html">Order History</a>
+          <a href="admin_dashboard.html">Admin Portal</a>
         </div>
         <div class="col d-flex">
           <span><i class='bx bxl-facebook-square'></i></span>
-          <span><i class='bx bxl-instagram-alt' ></i></span>
-          <span><i class='bx bxl-github' ></i></span>
-          <span><i class='bx bxl-twitter' ></i></span>
-          <span><i class='bx bxl-pinterest' ></i></span>
+          <span><i class='bx bxl-instagram-alt'></i></span>
+          <span><i class='bx bxl-github'></i></span>
+          <span><i class='bx bxl-twitter'></i></span>
         </div>
       </div>
     </footer>
 
-    <!-- Logout Confirmation Modal -->
-<div id="logoutModal" class="modal">
-  <div class="modal-content">
-    <span class="close-button">&times;</span>
-    <h2>Confirm Logout</h2>
-    <p>Are you sure you want to logout?</p>
-    <div class="modal-buttons">
-      <button id="cancelBtn" class="btn cancel-btn">Cancel</button>
-      <button id="logoutBtn" class="btn logout-btn">Logout</button>
-    </div>
-  </div>
-</div>
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.4.1/glide.min.js"></script>
+    <script src="./js/slider.js"></script>
+    <script src="./js/retroStore.js"></script>
+    <script src="./js/demoBadge.js"></script>
+    <script src="./js/storefront.js"></script>
 
-<script>
-  // Get modal element
-  const modal = document.getElementById("logoutModal");
+    <script>
+      // Populate New Arrivals & Featured Products
+      document.addEventListener('DOMContentLoaded', function () {
+        if (!window.RetroStore) return;
 
-  // Get the logout icon/link by its ID
-  const logoutLink = document.getElementById("logoutIcon");
+        const newArrivalsGrid = document.getElementById('new-arrivals-grid');
+        const featuredGrid = document.getElementById('featured-products-grid');
 
-  // Get the close button (X)
-  const closeButton = document.querySelector(".close-button");
+        const allProducts = window.RetroStore.getProducts();
 
-  // Get the Cancel and Logout buttons inside the modal
-  const cancelBtn = document.getElementById("cancelBtn");
-  const logoutBtn = document.getElementById("logoutBtn");
+        function createProductCard(product) {
+          const card = document.createElement('div');
+          card.className = 'product-item';
+          card.innerHTML = `
+            <div class="overlay">
+              <a href="productDetails.html?id=${product.id}" class="product-thumb">
+                <img src="${product.image_path}" alt="${product.name}" />
+              </a>
+              ${product.stock <= 0 ? '<span class="discount" style="background:#d90429;">Out of Stock</span>' : ''}
+            </div>
+            <div class="product-info">
+              <span>${product.category}</span>
+              <a href="productDetails.html?id=${product.id}">${product.name}</a>
+              <h4>₱${Number(product.price).toLocaleString('en-US', { minimumFractionDigits: 2 })}</h4>
+            </div>
+            <ul class="icons">
+              <li><a href="productDetails.html?id=${product.id}" title="Quick View"><i class="bx bx-show"></i></a></li>
+              <li><a href="#" class="add-to-cart-btn" data-id="${product.id}" title="Add to Cart"><i class="bx bx-cart"></i></a></li>
+            </ul>
+          `;
+          return card;
+        }
 
-  // Function to open the modal
-  function openModal(event) {
-    event.preventDefault(); // Prevent the default logout action
-    modal.style.display = "block";
-  }
+        // Render New Arrivals (first 8)
+        if (newArrivalsGrid) {
+          allProducts.slice(0, 8).forEach(prod => {
+            newArrivalsGrid.appendChild(createProductCard(prod));
+          });
+        }
 
-  // Function to close the modal
-  function closeModal() {
-    modal.style.display = "none";
-  }
+        // Render Featured (is_featured === 1 or next 4)
+        if (featuredGrid) {
+          const featured = allProducts.filter(p => p.is_featured === 1);
+          const list = featured.length > 0 ? featured.slice(0, 4) : allProducts.slice(4, 8);
+          list.forEach(prod => {
+            featuredGrid.appendChild(createProductCard(prod));
+          });
+        }
 
-  // When the user clicks on the logout link/icon, open the modal
-  if (logoutLink) {
-    logoutLink.addEventListener("click", openModal);
-  }
-
-  // When the user clicks on the close button (X), close the modal
-  if (closeButton) {
-    closeButton.addEventListener("click", closeModal);
-  }
-
-  // When the user clicks on the Cancel button, close the modal
-  if (cancelBtn) {
-    cancelBtn.addEventListener("click", closeModal);
-  }
-
-  // When the user clicks on the Logout button, proceed with logout
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", function() {
-      window.location.href = "logout.php";
-    });
-  }
-
-  // When the user clicks anywhere outside of the modal, close it
-  window.addEventListener("click", function(event) {
-    if (event.target == modal) {
-      closeModal();
-    }
-  });
-</script>
-
-  <!-- PopUp -->
-  <div class="popup hide-popup">
-    <div class="popup-content">
-      <div class="popup-close">
-        <i class='bx bx-x'></i>
-      </div>
-      <div class="popup-left">
-        <div class="popup-img-container">
-          <img class="popup-img" src="./images/popup.jpg" alt="popup">
-        </div>
-      </div>
-      <div class="popup-right">
-        <div class="right-content">
-          <h1>Get Discount <span>50%</span> Off</h1>
-          <p>Sign up to our newsletter and save 30% for you next purchase. No spam, we promise!
-          </p>
-          <form action="#">
-            <input type="email" placeholder="Enter your email..." class="popup-form">
-            <a href="#">Subscribe</a>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-
+        // Delegated Add to Cart
+        document.addEventListener('click', function (e) {
+          const cartBtn = e.target.closest('.add-to-cart-btn');
+          if (cartBtn) {
+            e.preventDefault();
+            const id = cartBtn.getAttribute('data-id');
+            window.RetroStore.addToCart(id, 1);
+            if (window.showRetroToast) {
+              const p = window.RetroStore.getProduct(id);
+              window.showRetroToast(`Added "${p ? p.name : 'Item'}" to your cart!`);
+            }
+          }
+        });
+      });
+    </script>
   </body>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.4.1/glide.min.js"></script>
-  <script src="./js/slider.js"></script>
-  <script src="./js/index.js"></script>
 </html>

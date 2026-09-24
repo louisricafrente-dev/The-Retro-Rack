@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="./images/logoretro.png" type="image/x-icon">
+    <title>Login - The Retro Rack</title>
+    <!-- Box icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" />
+    <!-- Custom StyleSheet -->
+    <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="stylesheet" href="./css/index.css" />
+    <style>
+      .login-container-card {
+        max-width: 480px;
+        margin: 4rem auto 6rem;
+        background: #fff;
+        border: 1px solid #e0ded7;
+        border-radius: 12px;
+        padding: 2.5rem;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.04);
+      }
+      .demo-login-box {
+        background: #faf8f5;
+        border: 1px solid rgba(255, 119, 0, 0.3);
+        border-radius: 8px;
+        padding: 1.2rem;
+        margin-bottom: 2rem;
+      }
+      .demo-login-box h4 {
+        color: var(--orange);
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .demo-click-btn {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        border-radius: 6px;
+        border: none;
+        font-weight: 600;
+        font-size: 13px;
+        cursor: pointer;
+        margin-top: 8px;
+        transition: all 0.2s;
+        text-align: center;
+      }
+      .demo-btn-admin {
+        background: #ff7700;
+        color: #fff;
+      }
+      .demo-btn-admin:hover {
+        background: #e06600;
+      }
+      .demo-btn-customer {
+        background: #2b2b2b;
+        color: #fff;
+      }
+      .demo-btn-customer:hover {
+        background: #444;
+      }
+      .form-group-login {
+        margin-bottom: 1.2rem;
+      }
+      .form-group-login label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+      .form-group-login input {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Nav -->
+    <div class="top-nav">
+      <div class="container d-flex">
+        <p>Order Online Or Call Us: (+63) 907 343 4119</p>
+        <ul class="d-flex">
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="#" id="adminLink">Admin</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="header" id="header">
+      <div class="navigation">
+        <div class="nav-center container d-flex">
+          <a href="index.html" class="logo">
+            <h1>The Retro Rack</h1>
+          </a>
+
+          <ul class="nav-list d-flex">
+            <li class="nav-item">
+              <a href="index.html" class="nav-link">Home</a>
+            </li>
+            <li class="nav-item">
+              <a href="product.html" class="nav-link">Shop</a>
+            </li>
+            <li class="nav-item">
+              <a href="terms.html" class="nav-link">Terms</a>
+            </li>
+            <li class="nav-item">
+              <a href="about.html" class="nav-link">About</a>
+            </li>
+            <li class="nav-item">
+              <a href="contact.html" class="nav-link">Contact</a>
+            </li>
+            <li class="nav-item" id="welcome-user-container"></li>
+          </ul>
+
+          <div class="icons d-flex">
+            <a href="loginview.html" class="icon" id="userProfileLink" title="Account / Profile">
+              <i class="bx bx-user"></i>
+            </a>
+
+            <div class="search-container">
+              <a href="#" class="icon" id="searchIcon" title="Search">
+                <i class="bx bx-search"></i>
+              </a>
+              <div class="search-popup" id="searchPopup">
+                <form action="product.html" method="get">
+                  <input type="text" name="search_query" placeholder="Search products..." required>
+                  <button type="submit">Go</button>
+                </form>
+              </div>
+            </div>
+
+            <a href="cart.html" class="icon" title="View Cart">
+              <i class="bx bx-cart"></i>
+              <span id="cart-counter" class="d-flex cart-count">0</span>
+            </a>
+
+            <a href="#" class="icon" id="logoutIcon" title="Logout">
+              <i class="bx bx-log-out"></i>
+            </a>
+          </div>
+
+          <div class="hamburger">
+            <i class="bx bx-menu-alt-left"></i>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Login Container -->
+    <div class="container">
+      <div class="login-container-card">
+        <h1 style="font-size: 1.8rem; margin-bottom: 6px;">Sign In to Retro Rack</h1>
+        <p style="color: #666; font-size: 13px; margin-bottom: 1.5rem;">
+          Don't have an account yet? <a href="signupview.html" style="color: var(--orange); font-weight: 600;">Sign Up</a>
+        </p>
+
+        <!-- Live Portfolio 1-Click Access -->
+        <div class="demo-login-box">
+          <h4><i class='bx bx-bolt-circle'></i> Portfolio 1-Click Demo Login</h4>
+          <p style="font-size: 12px; color: #666; margin-bottom: 10px;">
+            Choose a profile below to evaluate features instantly without typing credentials:
+          </p>
+          <button type="button" class="demo-click-btn demo-btn-admin" id="oneClickAdminLogin">
+            ⚡ Explore as Admin (Full Store Management)
+          </button>
+          <button type="button" class="demo-click-btn demo-btn-customer" id="oneClickCustomerLogin">
+            👤 Explore as Customer (Alex Mercer)
+          </button>
+        </div>
+
+        <form id="standard-login-form">
+          <div class="form-group-login">
+            <label>Username or Email</label>
+            <input type="text" id="login-ident" value="alex" placeholder="Enter username or email" required />
+          </div>
+
+          <div class="form-group-login">
+            <label>Password</label>
+            <input type="password" id="login-psw" value="password123" placeholder="Enter password" required />
+          </div>
+
+          <button type="submit" class="btn" style="width: 100%; padding: 12px; background: var(--orange); color: #fff; font-weight: 600; cursor: pointer;">
+            Login
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="row">
+        <div class="col d-flex">
+          <h4>INFORMATION</h4>
+          <a href="about.html">About us</a>
+          <a href="contact.html">Contact Us</a>
+          <a href="terms.html">Terms & Conditions</a>
+          <a href="product.html">Catalog</a>
+        </div>
+        <div class="col d-flex">
+          <h4>CUSTOMER PORTAL</h4>
+          <a href="loginview.html">My Account</a>
+          <a href="cart.html">Shopping Cart</a>
+          <a href="order_history.html">Order History</a>
+          <a href="admin_dashboard.html">Admin Portal</a>
+        </div>
+        <div class="col d-flex">
+          <span><i class='bx bxl-facebook-square'></i></span>
+          <span><i class='bx bxl-instagram-alt'></i></span>
+          <span><i class='bx bxl-github'></i></span>
+          <span><i class='bx bxl-twitter'></i></span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="./js/retroStore.js"></script>
+    <script src="./js/demoBadge.js"></script>
+    <script src="./js/storefront.js"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        if (!window.RetroStore) return;
+
+        // 1-Click Admin
+        document.getElementById('oneClickAdminLogin').addEventListener('click', function () {
+          window.RetroStore.loginAsAdmin();
+          window.location.href = 'admin_dashboard.html';
+        });
+
+        // 1-Click Customer
+        document.getElementById('oneClickCustomerLogin').addEventListener('click', function () {
+          window.RetroStore.loginAsCustomer();
+          window.location.href = 'profile.html';
+        });
+
+        // Form Submit
+        document.getElementById('standard-login-form').addEventListener('submit', function (e) {
+          e.preventDefault();
+          const ident = document.getElementById('login-ident').value.trim();
+          if (ident.toLowerCase().includes('admin')) {
+            window.RetroStore.loginAsAdmin();
+            window.location.href = 'admin_dashboard.html';
+          } else {
+            window.RetroStore.loginAsCustomer();
+            window.location.href = 'profile.html';
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

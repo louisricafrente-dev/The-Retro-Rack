@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="./images/logoretro.png" type="image/x-icon">
+  <title>Admin Dashboard - The Retro Rack</title>
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="./css/styles.css">
+  <link rel="stylesheet" href="./css/admin_dashboard.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <!-- Admin Top Bar -->
+  <header class="top-nav" id="admin-header">
+    <div class="container" style="display:flex; justify-content:space-between; align-items:center;">
+      <div class="welcome">
+        <span id="currentDateTime">Loading clock...</span>
+      </div>
+      <ul class="nav-links" style="display:flex; gap:15px; align-items:center;">
+        <li><a href="index.html" title="View Storefront" style="color:var(--orange); font-weight:600;"><i class="fas fa-store"></i> Customer Storefront</a></li>
+        <li><a href="#" id="logoutLink"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- Logout Confirmation Modal -->
+  <div id="logoutModal" class="modal">
+    <div class="modal-content">
+      <span class="close-button">&times;</span>
+      <h2>Confirm Logout</h2>
+      <p>Are you sure you want to log out of the admin panel?</p>
+      <div class="modal-buttons">
+        <button id="cancelLogout" class="btn cancel-btn">Cancel</button>
+        <a href="#" id="confirmLogout" class="btn logout-btn">Logout</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Bar -->
+  <nav class="navigation">
+    <div class="nav-center container d-flex">
+      <a href="admin_dashboard.html" class="logo">Retro Rack Shop Admin</a>
+      <ul class="nav-list d-flex">
+        <li class="nav-item"><a href="admin_dashboard.html" class="nav-link active">Dashboard</a></li>
+        <li class="nav-item"><a href="admin_products.html" class="nav-link">Products</a></li>
+        <li class="nav-item"><a href="admin_orders.html" class="nav-link">Orders</a></li>
+        <li class="nav-item"><a href="admin_users.html" class="nav-link">Users</a></li>
+        <li class="nav-item"><a href="admin_report.html" class="nav-link">Reports</a></li>
+        <li class="nav-item"><a href="admin_settings.html" class="nav-link">Settings</a></li>
+      </ul>
+      <div class="hamburger">
+        <i class="fas fa-bars"></i>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <section class="section main-admin">
+    <div class="container">
+      <div class="title">
+        <h1>Store Performance Overview</h1>
+      </div>
+
+      <!-- Dashboard Cards -->
+      <div class="admin-cards">
+        <div class="admin-card">
+          <div class="icon"><i class="fas fa-tshirt"></i></div>
+          <div class="admin-card-info">
+            <h3>Total Products</h3>
+            <span id="stat-products">--</span>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <div class="icon"><i class="fas fa-shopping-cart"></i></div>
+          <div class="admin-card-info">
+            <h3>Total Orders</h3>
+            <span id="stat-orders">--</span>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <div class="icon"><i class="fas fa-users"></i></div>
+          <div class="admin-card-info">
+            <h3>Total Users</h3>
+            <span id="stat-users">--</span>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <div class="icon"><i class="fas fa-peso-sign"></i></div>
+          <div class="admin-card-info">
+            <h3>Total Revenue</h3>
+            <span id="stat-revenue">₱0.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart and Top Products Section -->
+      <div class="dashboard-grid" style="display:grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-top: 2rem;">
+        <div class="card" style="padding: 1.5rem; background: #fff; border-radius: 8px;">
+          <h2 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--black);">6-Month Sales Trajectory</h2>
+          <canvas id="salesTrendChart" height="130"></canvas>
+        </div>
+
+        <div class="card" style="padding: 1.5rem; background: #fff; border-radius: 8px;">
+          <h2 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--black);">Top Selling Pieces</h2>
+          <div id="top-products-list" style="display: flex; flex-direction: column; gap: 12px;">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Orders Table -->
+      <div class="recent-orders" style="margin-top: 2.5rem; background: #fff; padding: 1.5rem; border-radius: 8px; border: 1px solid #e0ded7;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1rem;">
+          <h2 style="font-size: 1.3rem;">Recent Customer Orders</h2>
+          <a href="admin_orders.html" class="btn" style="font-size: 12px; background: var(--orange); color: #fff;">View All Orders</a>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Status</th>
+              <th>Total Amount</th>
+              <th>Date</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="recent-orders-body">
+            <!-- Rendered via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scripts -->
+  <script src="./js/retroStore.js"></script>
+  <script src="./js/demoBadge.js"></script>
+  <script src="./js/adminHelper.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      if (!window.RetroStore) return;
+
+      const stats = window.RetroStore.getStats();
+
+      // Cards
+      document.getElementById('stat-products').textContent = stats.totalProducts;
+      document.getElementById('stat-orders').textContent = stats.totalOrders;
+      document.getElementById('stat-users').textContent = stats.totalUsers;
+      document.getElementById('stat-revenue').textContent = `₱${Number(stats.totalRevenue).toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+
+      // Top Products
+      const topList = document.getElementById('top-products-list');
+      if (stats.topProducts && stats.topProducts.length > 0) {
+        topList.innerHTML = stats.topProducts.map((p, idx) => `
+          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="width:22px; height:22px; border-radius:50%; background:var(--orange); color:#fff; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;">${idx+1}</span>
+              <strong style="font-size:13px; color:#333;">${p.name}</strong>
+            </div>
+            <span style="font-size:12px; font-weight:600; color:#555;">${p.quantity} units</span>
+          </div>
+        `).join('');
+      } else {
+        topList.innerHTML = '<p style="font-size:13px; color:#888;">No sales registered yet.</p>';
+      }
+
+      // Recent Orders (latest 5)
+      const recentBody = document.getElementById('recent-orders-body');
+      const orders = window.RetroStore.getOrders().slice(0, 5);
+
+      function getStatusColor(status) {
+        const s = (status || '').toLowerCase();
+        if (s === 'delivered') return '#00b894';
+        if (s === 'shipped') return '#0984e3';
+        if (s === 'processing') return '#636e72';
+        if (s === 'cancelled') return '#d63031';
+        return '#e17055';
+      }
+
+      if (orders.length > 0) {
+        recentBody.innerHTML = orders.map(o => `
+          <tr>
+            <td><strong>#${o.id}</strong></td>
+            <td>${o.user_name || 'Guest'}</td>
+            <td>
+              <span style="color:#fff; background:${getStatusColor(o.status)}; padding:3px 8px; border-radius:4px; font-size:11px; font-weight:bold; text-transform:uppercase;">
+                ${o.status}
+              </span>
+            </td>
+            <td><strong>₱${Number(o.total_amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}</strong></td>
+            <td>${o.order_date.split(' ')[0]}</td>
+            <td>
+              <a href="admin_orders.html" style="color:var(--orange); font-weight:600; font-size:13px;">Manage <i class="fas fa-arrow-right"></i></a>
+            </td>
+          </tr>
+        `).join('');
+      } else {
+        recentBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No recent orders.</td></tr>';
+      }
+
+      // Sales Chart
+      const salesData = window.RetroStore.getMonthlySalesData();
+      const ctx = document.getElementById('salesTrendChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: salesData.labels,
+          datasets: [{
+            label: 'Monthly Revenue (₱)',
+            data: salesData.data,
+            borderColor: '#ff7700',
+            backgroundColor: 'rgba(255, 119, 0, 0.1)',
+            fill: true,
+            tension: 0.35,
+            borderWidth: 2,
+            pointBackgroundColor: '#ff7700'
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'top' }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: function (val) {
+                  return '₱' + val.toLocaleString();
+                }
+              }
+            }
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>

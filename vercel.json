@@ -1,0 +1,21 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/(.*)\\.php", "destination": "/$1.html" },
+    { "source": "/admin", "destination": "/admin_dashboard.html" },
+    { "source": "/admin/dashboard", "destination": "/admin_dashboard.html" },
+    { "source": "/admin/products", "destination": "/admin_products.html" },
+    { "source": "/admin/orders", "destination": "/admin_orders.html" },
+    { "source": "/admin/users", "destination": "/admin_users.html" },
+    { "source": "/admin/reports", "destination": "/admin_report.html" },
+    { "source": "/admin/settings", "destination": "/admin_settings.html" },
+    { "source": "/shop", "destination": "/product.html" },
+    { "source": "/cart", "destination": "/cart.html" },
+    { "source": "/checkout", "destination": "/checkout.html" },
+    { "source": "/orders", "destination": "/order_history.html" },
+    { "source": "/profile", "destination": "/profile.html" },
+    { "source": "/login", "destination": "/loginview.html" },
+    { "source": "/signup", "destination": "/signupview.html" }
+  ]
+}

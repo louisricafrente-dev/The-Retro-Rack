@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="./images/logoretro.png" type="image/x-icon">
+    <title>The Retro Rack - Vintage Shop & Catalog</title>
+    <!-- Box icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" />
+    <!-- Custom StyleSheet -->
+    <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="stylesheet" href="./css/index.css" />
+    <style>
+      .category-filters {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin: 1.5rem 0;
+      }
+      .filter-pill {
+        padding: 6px 16px;
+        border-radius: 20px;
+        background: #f0eee6;
+        color: #333;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.2s ease;
+      }
+      .filter-pill.active, .filter-pill:hover {
+        background: var(--orange);
+        color: #fff;
+      }
+      .shop-sort-select {
+        padding: 8px 12px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 14px;
+        background: #fff;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Nav -->
+    <div class="top-nav">
+      <div class="container d-flex">
+        <p>Order Online Or Call Us: (+63) 907 343 4119</p>
+        <ul class="d-flex">
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="#" id="adminLink">Admin</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div id="adminLoginModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>Admin Login</h2>
+        <form id="adminLoginForm">
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label for="admin-username" style="display:block; margin-bottom: 5px;">Username</label>
+            <input type="text" id="admin-username" name="username" class="form-input" value="admin" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;" required>
+          </div>
+          <div class="form-group" style="margin-bottom: 15px;">
+            <label for="admin-password" style="display:block; margin-bottom: 5px;">Password</label>
+            <input type="password" id="admin-password" name="password" class="form-input" value="password123" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;" required>
+          </div>
+          <button type="submit" class="btn logout-btn" style="width:100%; margin-bottom: 10px;">Login</button>
+          <button type="button" id="oneClickAdminBtn" class="btn" style="width:100%; background: #ff7700; color: #fff; font-weight: 600;">
+            ⚡ 1-Click Demo Login as Admin
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="header" id="header">
+      <div class="navigation">
+        <div class="nav-center container d-flex">
+          <a href="index.html" class="logo">
+            <h1>The Retro Rack</h1>
+          </a>
+
+          <ul class="nav-list d-flex">
+            <li class="nav-item">
+              <a href="index.html" class="nav-link">Home</a>
+            </li>
+            <li class="nav-item">
+              <a href="product.html" class="nav-link active">Shop</a>
+            </li>
+            <li class="nav-item">
+              <a href="terms.html" class="nav-link">Terms</a>
+            </li>
+            <li class="nav-item">
+              <a href="about.html" class="nav-link">About</a>
+            </li>
+            <li class="nav-item">
+              <a href="contact.html" class="nav-link">Contact</a>
+            </li>
+            <li class="nav-item" id="welcome-user-container"></li>
+          </ul>
+
+          <div class="icons d-flex">
+            <a href="loginview.html" class="icon" id="userProfileLink" title="Account / Profile">
+              <i class="bx bx-user"></i>
+            </a>
+
+            <div class="search-container">
+              <a href="#" class="icon" id="searchIcon" title="Search">
+                <i class="bx bx-search"></i>
+              </a>
+              <div class="search-popup" id="searchPopup">
+                <form action="product.html" method="get">
+                  <input type="text" name="search_query" placeholder="Search products..." required>
+                  <button type="submit">Go</button>
+                </form>
+              </div>
+            </div>
+
+            <a href="cart.html" class="icon" title="View Cart">
+              <i class="bx bx-cart"></i>
+              <span id="cart-counter" class="d-flex cart-count">0</span>
+            </a>
+
+            <a href="#" class="icon" id="logoutIcon" title="Logout">
+              <i class="bx bx-log-out"></i>
+            </a>
+          </div>
+
+          <div class="hamburger">
+            <i class="bx bx-menu-alt-left"></i>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main All Products View -->
+    <section class="section all-products" id="products">
+      <div class="top container d-flex" style="justify-content: space-between; align-items: center; flex-wrap: wrap;">
+        <div>
+          <h1 id="catalog-title">All Vintage Products</h1>
+          <p id="catalog-subtitle" style="color: #666; font-size: 14px;">Browse curated pieces from our permanent retro archive</p>
+        </div>
+        <div>
+          <select id="sort-select" class="shop-sort-select">
+            <option value="default">Featured / Default</option>
+            <option value="price_asc">Price: Low to High</option>
+            <option value="price_desc">Price: High to Low</option>
+            <option value="newest">Newest Arrivals</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div class="container">
+        <div class="category-filters" id="category-pills">
+          <button class="filter-pill active" data-category="All">All Categories</button>
+          <button class="filter-pill" data-category="Men's Wear">Men's Wear</button>
+          <button class="filter-pill" data-category="Women's Wear">Women's Wear</button>
+          <button class="filter-pill" data-category="Accessories">Accessories</button>
+        </div>
+      </div>
+
+      <!-- Products Grid -->
+      <div class="product-center container" id="catalog-grid" style="margin-top: 1.5rem;">
+        <!-- Injected via JS -->
+      </div>
+    </section>
+
+    <!-- Logout Modal -->
+    <div id="logoutModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>Confirm Logout</h2>
+        <p>Are you sure you want to end your demo session?</p>
+        <div class="modal-buttons" style="margin-top: 15px; display:flex; gap: 10px; justify-content: flex-end;">
+          <button id="cancelLogout" class="btn cancel-btn">Cancel</button>
+          <a href="#" id="confirmLogout" class="btn logout-btn">Logout</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="row">
+        <div class="col d-flex">
+          <h4>INFORMATION</h4>
+          <a href="about.html">About us</a>
+          <a href="contact.html">Contact Us</a>
+          <a href="terms.html">Terms & Conditions</a>
+          <a href="product.html">Catalog</a>
+        </div>
+        <div class="col d-flex">
+          <h4>CUSTOMER PORTAL</h4>
+          <a href="loginview.html">My Account</a>
+          <a href="cart.html">Shopping Cart</a>
+          <a href="order_history.html">Order History</a>
+          <a href="admin_dashboard.html">Admin Portal</a>
+        </div>
+        <div class="col d-flex">
+          <span><i class='bx bxl-facebook-square'></i></span>
+          <span><i class='bx bxl-instagram-alt'></i></span>
+          <span><i class='bx bxl-github'></i></span>
+          <span><i class='bx bxl-twitter'></i></span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="./js/retroStore.js"></script>
+    <script src="./js/demoBadge.js"></script>
+    <script src="./js/storefront.js"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        if (!window.RetroStore) return;
+
+        const grid = document.getElementById('catalog-grid');
+        const titleEl = document.getElementById('catalog-title');
+        const sortSelect = document.getElementById('sort-select');
+        const categoryPills = document.querySelectorAll('.filter-pill');
+
+        // Parse URL params
+        const urlParams = new URLSearchParams(window.location.search);
+        let currentCategory = urlParams.get('category') || 'All';
+        let searchQuery = urlParams.get('search_query') || '';
+
+        // Highlight matching category pill
+        categoryPills.forEach(pill => {
+          if (pill.getAttribute('data-category').toLowerCase() === currentCategory.toLowerCase()) {
+            pill.classList.add('active');
+          } else {
+            pill.classList.remove('active');
+          }
+        });
+
+        function renderProducts() {
+          grid.innerHTML = '';
+          const sortVal = sortSelect ? sortSelect.value : 'default';
+
+          const filters = {
+            category: currentCategory,
+            search: searchQuery,
+            sort: sortVal
+          };
+
+          const products = window.RetroStore.getProducts(filters);
+
+          if (searchQuery) {
+            titleEl.textContent = `Search: "${searchQuery}" (${products.length} found)`;
+          } else if (currentCategory !== 'All') {
+            titleEl.textContent = `${currentCategory} (${products.length})`;
+          } else {
+            titleEl.textContent = `All Vintage Products (${products.length})`;
+          }
+
+          if (products.length === 0) {
+            grid.innerHTML = `
+              <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem;">
+                <i class='bx bx-search-alt' style="font-size: 48px; color: #ccc;"></i>
+                <h3 style="margin-top: 10px;">No vintage items found</h3>
+                <p style="color: #777;">Try clearing filters or searching for something else.</p>
+                <button class="btn" style="margin-top: 15px;" onclick="window.location.href='product.html'">View All Items</button>
+              </div>
+            `;
+            return;
+          }
+
+          products.forEach(product => {
+            const card = document.createElement('div');
+            card.className = 'product-item';
+            card.innerHTML = `
+              <div class="overlay">
+                <a href="productDetails.html?id=${product.id}" class="product-thumb">
+                  <img src="${product.image_path}" alt="${product.name}" />
+                </a>
+                ${product.stock <= 0 ? '<span class="discount" style="background:#d90429;">Out of Stock</span>' : ''}
+              </div>
+              <div class="product-info">
+                <span>${product.category}</span>
+                <a href="productDetails.html?id=${product.id}">${product.name}</a>
+                <h4>₱${Number(product.price).toLocaleString('en-US', { minimumFractionDigits: 2 })}</h4>
+              </div>
+              <ul class="icons">
+                <li><a href="productDetails.html?id=${product.id}" title="View Details"><i class="bx bx-show"></i></a></li>
+                <li><a href="#" class="add-to-cart-btn" data-id="${product.id}" title="Add to Cart"><i class="bx bx-cart"></i></a></li>
+              </ul>
+            `;
+            grid.appendChild(card);
+          });
+        }
+
+        // Category pill click handler
+        categoryPills.forEach(pill => {
+          pill.addEventListener('click', function () {
+            categoryPills.forEach(p => p.classList.remove('active'));
+            this.classList.add('active');
+            currentCategory = this.getAttribute('data-category');
+            searchQuery = ''; // Clear search when switching categories
+            renderProducts();
+          });
+        });
+
+        // Sort change handler
+        if (sortSelect) {
+          sortSelect.addEventListener('change', renderProducts);
+        }
+
+        // Add to cart click
+        document.addEventListener('click', function (e) {
+          const btn = e.target.closest('.add-to-cart-btn');
+          if (btn) {
+            e.preventDefault();
+            const id = btn.getAttribute('data-id');
+            window.RetroStore.addToCart(id, 1);
+            const p = window.RetroStore.getProduct(id);
+            if (window.showRetroToast) {
+              window.showRetroToast(`Added "${p ? p.name : 'Item'}" to your cart!`);
+            }
+          }
+        });
+
+        renderProducts();
+      });
+    </script>
+  </body>
+</html>

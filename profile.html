@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="./images/logoretro.png" type="image/x-icon">
+    <title>Customer Profile - The Retro Rack</title>
+    <!-- Box icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" />
+    <!-- Custom StyleSheet -->
+    <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="stylesheet" href="./css/index.css" />
+    <style>
+      .profile-wrapper {
+        margin: 4rem auto 6rem;
+      }
+      .profile-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2.5rem;
+      }
+      @media (max-width: 800px) {
+        .profile-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .profile-card {
+        background: #fff;
+        border: 1px solid #e0ded7;
+        border-radius: 8px;
+        padding: 2rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+      }
+      .profile-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 15px;
+      }
+      .avatar-circle {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: var(--orange);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        font-weight: 700;
+      }
+      .field-row {
+        margin-bottom: 14px;
+        font-size: 14px;
+      }
+      .field-row label {
+        display: block;
+        font-size: 12px;
+        font-weight: 600;
+        color: #777;
+        text-transform: uppercase;
+        margin-bottom: 3px;
+      }
+      .field-row input {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Nav -->
+    <div class="top-nav">
+      <div class="container d-flex">
+        <p>Order Online Or Call Us: (+63) 907 343 4119</p>
+        <ul class="d-flex">
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="#" id="adminLink">Admin</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div id="adminLoginModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>Admin Login</h2>
+        <form id="adminLoginForm">
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label for="admin-username" style="display:block; margin-bottom: 5px;">Username</label>
+            <input type="text" id="admin-username" name="username" class="form-input" value="admin" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;" required>
+          </div>
+          <div class="form-group" style="margin-bottom: 15px;">
+            <label for="admin-password" style="display:block; margin-bottom: 5px;">Password</label>
+            <input type="password" id="admin-password" name="password" class="form-input" value="password123" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;" required>
+          </div>
+          <button type="submit" class="btn logout-btn" style="width:100%; margin-bottom: 10px;">Login</button>
+          <button type="button" id="oneClickAdminBtn" class="btn" style="width:100%; background: #ff7700; color: #fff; font-weight: 600;">
+            ⚡ 1-Click Demo Login as Admin
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="header" id="header">
+      <div class="navigation">
+        <div class="nav-center container d-flex">
+          <a href="index.html" class="logo">
+            <h1>The Retro Rack</h1>
+          </a>
+
+          <ul class="nav-list d-flex">
+            <li class="nav-item">
+              <a href="index.html" class="nav-link">Home</a>
+            </li>
+            <li class="nav-item">
+              <a href="product.html" class="nav-link">Shop</a>
+            </li>
+            <li class="nav-item">
+              <a href="terms.html" class="nav-link">Terms</a>
+            </li>
+            <li class="nav-item">
+              <a href="about.html" class="nav-link">About</a>
+            </li>
+            <li class="nav-item">
+              <a href="contact.html" class="nav-link">Contact</a>
+            </li>
+            <li class="nav-item" id="welcome-user-container"></li>
+          </ul>
+
+          <div class="icons d-flex">
+            <a href="profile.html" class="icon" id="userProfileLink" title="Account / Profile">
+              <i class="bx bx-user"></i>
+            </a>
+
+            <div class="search-container">
+              <a href="#" class="icon" id="searchIcon" title="Search">
+                <i class="bx bx-search"></i>
+              </a>
+              <div class="search-popup" id="searchPopup">
+                <form action="product.html" method="get">
+                  <input type="text" name="search_query" placeholder="Search products..." required>
+                  <button type="submit">Go</button>
+                </form>
+              </div>
+            </div>
+
+            <a href="cart.html" class="icon" title="View Cart">
+              <i class="bx bx-cart"></i>
+              <span id="cart-counter" class="d-flex cart-count">0</span>
+            </a>
+
+            <a href="#" class="icon" id="logoutIcon" title="Logout">
+              <i class="bx bx-log-out"></i>
+            </a>
+          </div>
+
+          <div class="hamburger">
+            <i class="bx bx-menu-alt-left"></i>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Profile Section -->
+    <div class="container profile-wrapper">
+      <h1 style="margin-bottom: 2rem; font-size: 2rem;">Customer Account Profile</h1>
+
+      <div class="profile-grid">
+        <!-- Account Details -->
+        <div class="profile-card">
+          <div class="profile-header">
+            <div class="avatar-circle" id="user-avatar">A</div>
+            <div>
+              <h2 id="prof-name" style="font-size: 1.3rem;">Alex Mercer</h2>
+              <span style="font-size: 13px; color: #777;" id="prof-username">@alex</span>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <label>Email Address</label>
+            <input type="email" id="prof-email" value="alex.mercer@gmail.com" />
+          </div>
+          <div class="field-row">
+            <label>Phone Number</label>
+            <input type="text" id="prof-phone" value="+63 917 882 4519" />
+          </div>
+          <div class="field-row">
+            <label>Date of Birth</label>
+            <input type="date" id="prof-dob" value="1998-05-14" />
+          </div>
+
+          <div style="margin-top: 1.5rem; display: flex; gap: 10px;">
+            <button type="button" class="btn" id="save-profile-btn" style="background: var(--orange); color: #fff;">
+              Save Profile Changes
+            </button>
+            <button type="button" class="btn" id="logout-prof-btn" style="background: #333; color: #fff;">
+              Log Out
+            </button>
+          </div>
+        </div>
+
+        <!-- Default Shipping Address -->
+        <div class="profile-card">
+          <h2 style="font-size: 1.3rem; margin-bottom: 1.2rem; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+            Default Shipping Address
+          </h2>
+
+          <div class="field-row">
+            <label>House / Unit & Street</label>
+            <input type="text" id="addr-street" value="Unit 402 Vintage Boulevard" />
+          </div>
+          <div class="field-row">
+            <label>Barangay</label>
+            <input type="text" id="addr-barangay" value="San Isidro" />
+          </div>
+          <div class="field-row">
+            <label>City / Municipality</label>
+            <input type="text" id="addr-city" value="Naga City" />
+          </div>
+          <div class="field-row">
+            <label>Province</label>
+            <input type="text" id="addr-province" value="Camarines Sur" />
+          </div>
+          <div class="field-row">
+            <label>Postal Code</label>
+            <input type="text" id="addr-postal" value="4400" />
+          </div>
+
+          <button type="button" class="btn" id="save-address-btn" style="background: var(--black); color: #fff; margin-top: 10px;">
+            Update Shipping Address
+          </button>
+
+          <div style="margin-top: 2rem; border-top: 1px solid #eee; padding-top: 15px;">
+            <h4>Quick Account Links:</h4>
+            <div style="display:flex; gap:10px; margin-top: 10px; flex-wrap:wrap;">
+              <a href="order_history.html" class="btn" style="font-size: 12px; background: #eaeaea; color: #333;">Order History</a>
+              <a href="cart.html" class="btn" style="font-size: 12px; background: #eaeaea; color: #333;">Shopping Cart</a>
+              <a href="admin_dashboard.html" class="btn" style="font-size: 12px; background: rgba(255, 119, 0, 0.15); color: var(--orange);">⚡ Admin Portal</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="row">
+        <div class="col d-flex">
+          <h4>INFORMATION</h4>
+          <a href="about.html">About us</a>
+          <a href="contact.html">Contact Us</a>
+          <a href="terms.html">Terms & Conditions</a>
+          <a href="product.html">Catalog</a>
+        </div>
+        <div class="col d-flex">
+          <h4>CUSTOMER PORTAL</h4>
+          <a href="loginview.html">My Account</a>
+          <a href="cart.html">Shopping Cart</a>
+          <a href="order_history.html">Order History</a>
+          <a href="admin_dashboard.html">Admin Portal</a>
+        </div>
+        <div class="col d-flex">
+          <span><i class='bx bxl-facebook-square'></i></span>
+          <span><i class='bx bxl-instagram-alt'></i></span>
+          <span><i class='bx bxl-github'></i></span>
+          <span><i class='bx bxl-twitter'></i></span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="./js/retroStore.js"></script>
+    <script src="./js/demoBadge.js"></script>
+    <script src="./js/storefront.js"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        if (!window.RetroStore) return;
+
+        const auth = window.RetroStore.getAuth();
+        const user = auth.user || {
+          fullname: 'Alex Mercer',
+          username: 'alex',
+          email: 'alex.mercer@gmail.com',
+          phone: '+63 917 882 4519',
+          dob: '1998-05-14',
+          address: {
+            house_number: 'Unit 402',
+            street: 'Vintage Boulevard',
+            barangay: 'San Isidro',
+            city: 'Naga City',
+            province: 'Camarines Sur',
+            postal_code: '4400'
+          }
+        };
+
+        const avatar = document.getElementById('user-avatar');
+        const nameEl = document.getElementById('prof-name');
+        const usernameEl = document.getElementById('prof-username');
+        const emailInput = document.getElementById('prof-email');
+        const phoneInput = document.getElementById('prof-phone');
+        const dobInput = document.getElementById('prof-dob');
+
+        const streetInput = document.getElementById('addr-street');
+        const brgyInput = document.getElementById('addr-barangay');
+        const cityInput = document.getElementById('addr-city');
+        const provInput = document.getElementById('addr-province');
+        const postInput = document.getElementById('addr-postal');
+
+        if (user.fullname) {
+          avatar.textContent = user.fullname.charAt(0).toUpperCase();
+          nameEl.textContent = user.fullname;
+          usernameEl.textContent = `@${user.username || 'user'}`;
+          emailInput.value = user.email || '';
+          phoneInput.value = user.phone || '';
+          dobInput.value = user.dob || '';
+
+          if (user.address) {
+            streetInput.value = `${user.address.house_number || ''} ${user.address.street || ''}`.trim();
+            brgyInput.value = user.address.barangay || '';
+            cityInput.value = user.address.city || '';
+            provInput.value = user.address.province || '';
+            postInput.value = user.address.postal_code || '';
+          }
+        }
+
+        document.getElementById('save-profile-btn').addEventListener('click', function () {
+          user.email = emailInput.value;
+          user.phone = phoneInput.value;
+          user.dob = dobInput.value;
+          if (window.showRetroToast) window.showRetroToast('Profile details updated successfully!');
+        });
+
+        document.getElementById('save-address-btn').addEventListener('click', function () {
+          user.address = {
+            street: streetInput.value,
+            barangay: brgyInput.value,
+            city: cityInput.value,
+            province: provInput.value,
+            postal_code: postInput.value
+          };
+          if (window.showRetroToast) window.showRetroToast('Shipping address saved!');
+        });
+
+        document.getElementById('logout-prof-btn').addEventListener('click', function () {
+          window.RetroStore.logout();
+          window.location.href = 'loginview.html';
+        });
+      });
+    </script>
+  </body>
+</html>

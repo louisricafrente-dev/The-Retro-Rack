@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="./images/logoretro.png" type="image/x-icon">
+  <title>Admin Products - The Retro Rack</title>
+  <link rel="stylesheet" href="./css/styles.css">
+  <link rel="stylesheet" href="./css/admin_products.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    .modal-form-group {
+      margin-bottom: 12px;
+    }
+    .modal-form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .modal-form-group input, .modal-form-group select, .modal-form-group textarea {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .btn-action {
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      border: none;
+      margin-right: 5px;
+    }
+    .btn-action.edit {
+      background: #0984e3;
+      color: #fff;
+    }
+    .btn-action.delete {
+      background: #d63031;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <!-- Admin Top Bar -->
+  <header class="top-nav" id="admin-header">
+    <div class="container" style="display:flex; justify-content:space-between; align-items:center;">
+      <div class="welcome">
+        <span id="currentDateTime">Loading clock...</span>
+      </div>
+      <ul class="nav-links" style="display:flex; gap:15px; align-items:center;">
+        <li><a href="index.html" style="color:var(--orange); font-weight:600;"><i class="fas fa-store"></i> Customer Storefront</a></li>
+        <li><a href="#" id="logoutLink"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- Logout Confirmation Modal -->
+  <div id="logoutModal" class="modal">
+    <div class="modal-content">
+      <span class="close-button">&times;</span>
+      <h2>Confirm Logout</h2>
+      <p>Are you sure you want to log out of the admin panel?</p>
+      <div class="modal-buttons">
+        <button id="cancelLogout" class="btn cancel-btn">Cancel</button>
+        <a href="#" id="confirmLogout" class="btn logout-btn">Logout</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Bar -->
+  <nav class="navigation">
+    <div class="nav-center container d-flex">
+      <a href="admin_dashboard.html" class="logo">Retro Rack Shop Admin</a>
+      <ul class="nav-list d-flex">
+        <li class="nav-item"><a href="admin_dashboard.html" class="nav-link">Dashboard</a></li>
+        <li class="nav-item"><a href="admin_products.html" class="nav-link active">Products</a></li>
+        <li class="nav-item"><a href="admin_orders.html" class="nav-link">Orders</a></li>
+        <li class="nav-item"><a href="admin_users.html" class="nav-link">Users</a></li>
+        <li class="nav-item"><a href="admin_report.html" class="nav-link">Reports</a></li>
+        <li class="nav-item"><a href="admin_settings.html" class="nav-link">Settings</a></li>
+      </ul>
+      <div class="hamburger">
+        <i class="fas fa-bars"></i>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <section class="section main-admin">
+    <div class="container">
+      <div class="title d-flex" style="justify-content:space-between; align-items:center; margin-bottom: 1.5rem;">
+        <div>
+          <h1>Vintage Products Inventory</h1>
+          <p style="color:#666; font-size:14px;">Catalog, manage, and price thrifted apparel</p>
+        </div>
+        <button id="openAddModalBtn" class="btn" style="background:var(--orange); color:#fff; font-weight:600;">
+          <i class="fas fa-plus"></i> Add New Product
+        </button>
+      </div>
+
+      <!-- Inventory Table -->
+      <div class="admin-products" style="background:#fff; border-radius:8px; border:1px solid #e0ded7; overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Product ID</th>
+              <th>Product Details</th>
+              <th>Category</th>
+              <th>Stock</th>
+              <th>Unit Price</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="products-table-body">
+            <!-- Rendered via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Add Product Modal -->
+  <div id="addProductModal" class="modal">
+    <div class="modal-content" style="max-width: 500px;">
+      <span class="close-button" id="closeAddModal">&times;</span>
+      <h2>Add New Vintage Product</h2>
+      <form id="addProductForm">
+        <div class="modal-form-group">
+          <label>Product Name</label>
+          <input type="text" id="add-prod-name" placeholder="e.g. 90s Flannel Check Shirt" required />
+        </div>
+        <div class="modal-form-group">
+          <label>Category</label>
+          <select id="add-prod-cat">
+            <option value="Men's Wear">Men's Wear</option>
+            <option value="Women's Wear">Women's Wear</option>
+            <option value="Accessories">Accessories</option>
+          </select>
+        </div>
+        <div style="display:flex; gap:12px;">
+          <div class="modal-form-group" style="flex:1;">
+            <label>Price (₱)</label>
+            <input type="number" id="add-prod-price" placeholder="850.00" step="0.5" required />
+          </div>
+          <div class="modal-form-group" style="flex:1;">
+            <label>Initial Stock</label>
+            <input type="number" id="add-prod-stock" value="10" min="0" required />
+          </div>
+        </div>
+        <div class="modal-form-group">
+          <label>Product Image</label>
+          <select id="add-prod-img">
+            <option value="./images/product-1.jpg">Athletic Tee (product-1.jpg)</option>
+            <option value="./images/product-2.jpg">Rose Polo (product-2.jpg)</option>
+            <option value="./images/product-3.jpg">Off-White Camp Shirt (product-3.jpg)</option>
+            <option value="./images/product-4.jpg">Navy Corduroy (product-4.jpg)</option>
+            <option value="./images/product-5.jpg">Mustard Crewneck (product-5.jpg)</option>
+            <option value="./images/product-6.jpg">Teal Windbreaker (product-6.jpg)</option>
+            <option value="./images/product-7.jpg">Indigo Denim (product-7.jpg)</option>
+            <option value="./images/product-8.jpg">Retro Runner Sneakers (product-8.jpg)</option>
+            <option value="./uploads/Blue_Tshirt_1734462547.jpg">Azure Tee (Uploads)</option>
+            <option value="./uploads/Greeny_Polo_1734462617.jpg">Sage Knit Polo (Uploads)</option>
+          </select>
+        </div>
+        <div class="modal-form-group">
+          <label>Description</label>
+          <textarea id="add-prod-desc" rows="3" placeholder="Brief provenance or condition notes..."></textarea>
+        </div>
+        <button type="submit" class="btn" style="width:100%; background:var(--orange); color:#fff; font-weight:600; padding:10px;">
+          Save Product
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Product Modal -->
+  <div id="editProductModal" class="modal">
+    <div class="modal-content" style="max-width: 500px;">
+      <span class="close-button" id="closeEditModal">&times;</span>
+      <h2>Edit Product Details</h2>
+      <form id="editProductForm">
+        <input type="hidden" id="edit-prod-id" />
+        <div class="modal-form-group">
+          <label>Product Name</label>
+          <input type="text" id="edit-prod-name" required />
+        </div>
+        <div class="modal-form-group">
+          <label>Category</label>
+          <select id="edit-prod-cat">
+            <option value="Men's Wear">Men's Wear</option>
+            <option value="Women's Wear">Women's Wear</option>
+            <option value="Accessories">Accessories</option>
+          </select>
+        </div>
+        <div style="display:flex; gap:12px;">
+          <div class="modal-form-group" style="flex:1;">
+            <label>Price (₱)</label>
+            <input type="number" id="edit-prod-price" step="0.5" required />
+          </div>
+          <div class="modal-form-group" style="flex:1;">
+            <label>Stock Count</label>
+            <input type="number" id="edit-prod-stock" min="0" required />
+          </div>
+        </div>
+        <div class="modal-form-group">
+          <label>Description</label>
+          <textarea id="edit-prod-desc" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn" style="width:100%; background:#0984e3; color:#fff; font-weight:600; padding:10px;">
+          Update Product
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="./js/retroStore.js"></script>
+  <script src="./js/demoBadge.js"></script>
+  <script src="./js/adminHelper.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      if (!window.RetroStore) return;
+
+      const tbody = document.getElementById('products-table-body');
+      const addModal = document.getElementById('addProductModal');
+      const editModal = document.getElementById('editProductModal');
+
+      function renderTable() {
+        const products = window.RetroStore.getProducts();
+
+        tbody.innerHTML = products.map(p => `
+          <tr>
+            <td><strong>#${p.id}</strong></td>
+            <td>
+              <div class="d-flex align-center" style="gap:10px;">
+                <img src="${p.image_path}" alt="${p.name}" style="width:45px; height:45px; object-fit:cover; border-radius:4px;" />
+                <div>
+                  <strong style="color:#222; font-size:14px; display:block;">${p.name}</strong>
+                  <span style="font-size:11px; color:#888;">ID: P-${p.id}</span>
+                </div>
+              </div>
+            </td>
+            <td>${p.category}</td>
+            <td>
+              ${p.stock > 0 
+                ? `<span style="background:#e8f5e9; color:#2e7d32; padding:3px 8px; border-radius:4px; font-weight:600; font-size:12px;">${p.stock} in stock</span>`
+                : `<span style="background:#ffebee; color:#c62828; padding:3px 8px; border-radius:4px; font-weight:600; font-size:12px;">Out of Stock</span>`}
+            </td>
+            <td><strong>₱${Number(p.price).toLocaleString('en-US', { minimumFractionDigits: 2 })}</strong></td>
+            <td>
+              <button class="btn-action edit edit-btn" data-id="${p.id}" title="Edit Product">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn-action delete delete-btn" data-id="${p.id}" title="Delete Product">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        `).join('');
+
+        attachListeners();
+      }
+
+      function attachListeners() {
+        // Edit button
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+          btn.addEventListener('click', function () {
+            const id = this.getAttribute('data-id');
+            const p = window.RetroStore.getProduct(id);
+            if (!p) return;
+
+            document.getElementById('edit-prod-id').value = p.id;
+            document.getElementById('edit-prod-name').value = p.name;
+            document.getElementById('edit-prod-cat').value = p.category;
+            document.getElementById('edit-prod-price').value = p.price;
+            document.getElementById('edit-prod-stock').value = p.stock;
+            document.getElementById('edit-prod-desc').value = p.description || '';
+
+            editModal.style.display = 'block';
+          });
+        });
+
+        // Delete button
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+          btn.addEventListener('click', function () {
+            const id = this.getAttribute('data-id');
+            const p = window.RetroStore.getProduct(id);
+            if (confirm(`Are you sure you want to delete "${p ? p.name : 'this item'}" from inventory?`)) {
+              window.RetroStore.deleteProduct(id);
+              if (window.showRetroToast) window.showRetroToast('Product deleted from inventory.');
+              renderTable();
+            }
+          });
+        });
+      }
+
+      // Open Add Modal
+      document.getElementById('openAddModalBtn').addEventListener('click', function () {
+        addModal.style.display = 'block';
+      });
+
+      // Close buttons
+      document.getElementById('closeAddModal').addEventListener('click', () => { addModal.style.display = 'none'; });
+      document.getElementById('closeEditModal').addEventListener('click', () => { editModal.style.display = 'none'; });
+
+      window.addEventListener('click', (e) => {
+        if (e.target === addModal) addModal.style.display = 'none';
+        if (e.target === editModal) editModal.style.display = 'none';
+      });
+
+      // Submit Add
+      document.getElementById('addProductForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const name = document.getElementById('add-prod-name').value;
+        const cat = document.getElementById('add-prod-cat').value;
+        const price = document.getElementById('add-prod-price').value;
+        const stock = document.getElementById('add-prod-stock').value;
+        const img = document.getElementById('add-prod-img').value;
+        const desc = document.getElementById('add-prod-desc').value;
+
+        window.RetroStore.addProduct({
+          name, category: cat, price, stock, image_path: img, description: desc
+        });
+
+        if (window.showRetroToast) window.showRetroToast(`"${name}" added to inventory!`);
+        addModal.style.display = 'none';
+        this.reset();
+        renderTable();
+      });
+
+      // Submit Edit
+      document.getElementById('editProductForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const id = document.getElementById('edit-prod-id').value;
+        const name = document.getElementById('edit-prod-name').value;
+        const cat = document.getElementById('edit-prod-cat').value;
+        const price = parseFloat(document.getElementById('edit-prod-price').value);
+        const stock = parseInt(document.getElementById('edit-prod-stock').value, 10);
+        const desc = document.getElementById('edit-prod-desc').value;
+
+        window.RetroStore.updateProduct(id, {
+          name, category: cat, price, stock, description: desc
+        });
+
+        if (window.showRetroToast) window.showRetroToast(`"${name}" updated successfully!`);
+        editModal.style.display = 'none';
+        renderTable();
+      });
+
+      renderTable();
+    });
+  </script>
+</body>
+</html>

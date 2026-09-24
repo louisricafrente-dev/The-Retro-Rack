@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="./images/logoretro.png" type="image/x-icon">
+    <title>Checkout - The Retro Rack</title>
+    <!-- Box icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" />
+    <!-- Custom StyleSheet -->
+    <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="stylesheet" href="./css/index.css" />
+    <link rel="stylesheet" href="./css/checkout.css" />
+    <style>
+      .checkout-wrapper {
+        margin: 3.5rem auto 6rem;
+      }
+      .checkout-grid {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr;
+        gap: 3rem;
+      }
+      @media (max-width: 850px) {
+        .checkout-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .checkout-card {
+        background: #fff;
+        border: 1px solid #e0ded7;
+        border-radius: 8px;
+        padding: 2rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+      }
+      .form-row {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 15px;
+      }
+      .form-group {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 15px;
+      }
+      .form-group label {
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: #333;
+      }
+      .form-group input, .form-group select {
+        padding: 10px 12px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 14px;
+        outline: none;
+      }
+      .payment-methods {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin: 1rem 0;
+      }
+      .payment-option {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .payment-option:hover, .payment-option.active {
+        border-color: var(--orange);
+        background: rgba(255, 119, 0, 0.05);
+      }
+      .payment-option input {
+        cursor: pointer;
+      }
+      .review-items-list {
+        max-height: 260px;
+        overflow-y: auto;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 15px;
+        margin-bottom: 15px;
+      }
+      .review-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+      .review-item img {
+        width: 50px;
+        height: 50px;
+        border-radius: 4px;
+        object-fit: cover;
+      }
+      .order-success-banner {
+        text-align: center;
+        padding: 3.5rem 2rem;
+        background: #fff;
+        border: 1px solid #e0ded7;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+        max-width: 650px;
+        margin: 3rem auto;
+      }
+      .order-success-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: rgba(43, 147, 72, 0.15);
+        color: #2b9348;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 48px;
+        margin: 0 auto 1.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Nav -->
+    <div class="top-nav">
+      <div class="container d-flex">
+        <p>Order Online Or Call Us: (+63) 907 343 4119</p>
+        <ul class="d-flex">
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="#" id="adminLink">Admin</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div id="adminLoginModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>Admin Login</h2>
+        <form id="adminLoginForm">
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label for="admin-username" style="display:block; margin-bottom: 5px;">Username</label>
+            <input type="text" id="admin-username" name="username" class="form-input" value="admin" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;" required>
+          </div>
+          <div class="form-group" style="margin-bottom: 15px;">
+            <label for="admin-password" style="display:block; margin-bottom: 5px;">Password</label>
+            <input type="password" id="admin-password" name="password" class="form-input" value="password123" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;" required>
+          </div>
+          <button type="submit" class="btn logout-btn" style="width:100%; margin-bottom: 10px;">Login</button>
+          <button type="button" id="oneClickAdminBtn" class="btn" style="width:100%; background: #ff7700; color: #fff; font-weight: 600;">
+            ⚡ 1-Click Demo Login as Admin
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="header" id="header">
+      <div class="navigation">
+        <div class="nav-center container d-flex">
+          <a href="index.html" class="logo">
+            <h1>The Retro Rack</h1>
+          </a>
+
+          <ul class="nav-list d-flex">
+            <li class="nav-item">
+              <a href="index.html" class="nav-link">Home</a>
+            </li>
+            <li class="nav-item">
+              <a href="product.html" class="nav-link">Shop</a>
+            </li>
+            <li class="nav-item">
+              <a href="terms.html" class="nav-link">Terms</a>
+            </li>
+            <li class="nav-item">
+              <a href="about.html" class="nav-link">About</a>
+            </li>
+            <li class="nav-item">
+              <a href="contact.html" class="nav-link">Contact</a>
+            </li>
+            <li class="nav-item" id="welcome-user-container"></li>
+          </ul>
+
+          <div class="icons d-flex">
+            <a href="loginview.html" class="icon" id="userProfileLink" title="Account / Profile">
+              <i class="bx bx-user"></i>
+            </a>
+
+            <div class="search-container">
+              <a href="#" class="icon" id="searchIcon" title="Search">
+                <i class="bx bx-search"></i>
+              </a>
+              <div class="search-popup" id="searchPopup">
+                <form action="product.html" method="get">
+                  <input type="text" name="search_query" placeholder="Search products..." required>
+                  <button type="submit">Go</button>
+                </form>
+              </div>
+            </div>
+
+            <a href="cart.html" class="icon" title="View Cart">
+              <i class="bx bx-cart"></i>
+              <span id="cart-counter" class="d-flex cart-count">0</span>
+            </a>
+
+            <a href="#" class="icon" id="logoutIcon" title="Logout">
+              <i class="bx bx-log-out"></i>
+            </a>
+          </div>
+
+          <div class="hamburger">
+            <i class="bx bx-menu-alt-left"></i>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Checkout View -->
+    <div class="container checkout-wrapper">
+      <div id="checkout-main-content">
+        <!-- Rendered via JS -->
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="row">
+        <div class="col d-flex">
+          <h4>INFORMATION</h4>
+          <a href="about.html">About us</a>
+          <a href="contact.html">Contact Us</a>
+          <a href="terms.html">Terms & Conditions</a>
+          <a href="product.html">Catalog</a>
+        </div>
+        <div class="col d-flex">
+          <h4>CUSTOMER PORTAL</h4>
+          <a href="loginview.html">My Account</a>
+          <a href="cart.html">Shopping Cart</a>
+          <a href="order_history.html">Order History</a>
+          <a href="admin_dashboard.html">Admin Portal</a>
+        </div>
+        <div class="col d-flex">
+          <span><i class='bx bxl-facebook-square'></i></span>
+          <span><i class='bx bxl-instagram-alt'></i></span>
+          <span><i class='bx bxl-github'></i></span>
+          <span><i class='bx bxl-twitter'></i></span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="./js/retroStore.js"></script>
+    <script src="./js/demoBadge.js"></script>
+    <script src="./js/storefront.js"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        if (!window.RetroStore) return;
+
+        const mainContainer = document.getElementById('checkout-main-content');
+        const items = window.RetroStore.getCart();
+        const totals = window.RetroStore.getCartTotals();
+        const auth = window.RetroStore.getAuth();
+        const user = auth.user || {};
+
+        if (items.length === 0) {
+          mainContainer.innerHTML = `
+            <div style="text-align: center; padding: 4rem 1rem; background: #faf9f6; border-radius: 8px;">
+              <h2>No Items to Checkout</h2>
+              <p style="color: #666; margin: 10px 0 20px;">Your cart is currently empty. Please add items to proceed.</p>
+              <a href="product.html" class="btn">Go to Shop</a>
+            </div>
+          `;
+          return;
+        }
+
+        const address = user.address || {
+          house_number: "Unit 402",
+          street: "Vintage Boulevard",
+          barangay: "San Isidro",
+          city: "Naga City",
+          province: "Camarines Sur",
+          postal_code: "4400"
+        };
+
+        const reviewItemsHtml = items.map(item => `
+          <div class="review-item">
+            <img src="${item.image_path}" alt="${item.name}" />
+            <div style="flex:1;">
+              <strong style="font-size:13px; display:block;">${item.name}</strong>
+              <span style="font-size:12px; color:#777;">Qty: ${item.quantity} × ₱${Number(item.price).toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+            </div>
+            <span style="font-weight:600; font-size:14px;">₱${Number(item.price * item.quantity).toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+          </div>
+        `).join('');
+
+        mainContainer.innerHTML = `
+          <h1 style="margin-bottom: 2rem; font-size: 2rem;">Secure Checkout</h1>
+          <div class="checkout-grid">
+            <!-- Left: Delivery & Payment Details -->
+            <div class="checkout-card">
+              <h2 style="font-size: 1.25rem; margin-bottom: 1.2rem; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+                1. Delivery Address
+              </h2>
+              
+              <form id="checkout-form">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="cust-name" value="${user.fullname || 'Alex Mercer'}" required />
+                  </div>
+                  <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="cust-email" value="${user.email || 'alex.mercer@gmail.com'}" required />
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="text" id="cust-phone" value="${user.phone || '+63 917 882 4519'}" required />
+                  </div>
+                  <div class="form-group">
+                    <label>House / Unit & Street</label>
+                    <input type="text" id="cust-street" value="${address.house_number} ${address.street}" required />
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Barangay</label>
+                    <input type="text" id="cust-barangay" value="${address.barangay}" required />
+                  </div>
+                  <div class="form-group">
+                    <label>City / Municipality</label>
+                    <input type="text" id="cust-city" value="${address.city}" required />
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Province</label>
+                    <input type="text" id="cust-province" value="${address.province}" required />
+                  </div>
+                  <div class="form-group">
+                    <label>Postal Code</label>
+                    <input type="text" id="cust-postal" value="${address.postal_code}" required />
+                  </div>
+                </div>
+
+                <h2 style="font-size: 1.25rem; margin: 2rem 0 1rem; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+                  2. Payment Method
+                </h2>
+
+                <div class="payment-methods">
+                  <label class="payment-option active">
+                    <input type="radio" name="payment_method" value="Cash on Delivery" checked />
+                    <div>
+                      <strong>Cash on Delivery (COD)</strong>
+                      <div style="font-size: 12px; color: #777;">Pay upon delivery of your vintage items</div>
+                    </div>
+                  </label>
+                  <label class="payment-option">
+                    <input type="radio" name="payment_method" value="GCash" />
+                    <div>
+                      <strong>GCash (Instant Digital Pay)</strong>
+                      <div style="font-size: 12px; color: #777;">Direct payment via GCash e-wallet</div>
+                    </div>
+                  </label>
+                  <label class="payment-option">
+                    <input type="radio" name="payment_method" value="Credit Card" />
+                    <div>
+                      <strong>Credit / Debit Card</strong>
+                      <div style="font-size: 12px; color: #777;">Visa, MasterCard, or JCB card</div>
+                    </div>
+                  </label>
+                </div>
+
+                <button type="submit" class="btn" style="width: 100%; padding: 14px; font-size: 16px; font-weight: 700; background: var(--orange); color: #fff; margin-top: 1.5rem; cursor: pointer;">
+                  Confirm & Place Order (₱${Number(totals.total).toLocaleString('en-US', { minimumFractionDigits: 2 })})
+                </button>
+              </form>
+            </div>
+
+            <!-- Right: Order Review -->
+            <div class="checkout-card" style="height: fit-content; background: #faf9f6;">
+              <h2 style="font-size: 1.25rem; margin-bottom: 1.2rem; border-bottom: 1px solid #ddd; padding-bottom: 8px;">
+                Order Summary (${totals.itemCount} items)
+              </h2>
+
+              <div class="review-items-list">
+                ${reviewItemsHtml}
+              </div>
+
+              <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px;">
+                <span>Subtotal:</span>
+                <span>₱${Number(totals.subtotal).toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+              </div>
+
+              ${totals.discountAmount > 0 ? `
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; color: #2b9348;">
+                  <span>Coupon Discount (${totals.couponCode}):</span>
+                  <span>−₱${Number(totals.discountAmount).toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+                </div>
+              ` : ''}
+
+              <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px;">
+                <span>Shipping Fee:</span>
+                <span>${totals.shipping === 0 ? '<strong style="color: #2b9348;">FREE</strong>' : '₱' + totals.shipping.toFixed(2)}</span>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; border-top: 2px dashed #ccc; padding-top: 12px; margin-top: 12px; font-size: 1.3rem; font-weight: 700;">
+                <span>Total Amount:</span>
+                <span style="color: var(--orange);">₱${Number(totals.total).toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+              </div>
+
+              <div style="margin-top: 1.5rem; font-size: 12px; color: #777; line-height: 1.6; background: #fff; padding: 12px; border-radius: 6px; border: 1px solid #e0ded7;">
+                <i class='bx bx-shield-check' style="color: #2b9348; font-size: 16px;"></i> 
+                <strong>Live Portfolio Demo Guarantee:</strong> All orders are saved interactively to your browser session. You can inspect this order immediately in the Customer Order History or in the Admin Orders Management panel!
+              </div>
+            </div>
+          </div>
+        `;
+
+        // Payment option selection UI highlight
+        document.querySelectorAll('.payment-option').forEach(option => {
+          option.addEventListener('click', function () {
+            document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('active'));
+            this.classList.add('active');
+          });
+        });
+
+        // Form submission
+        const checkoutForm = document.getElementById('checkout-form');
+        checkoutForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+
+          const selectedPayment = document.querySelector('input[name="payment_method"]:checked').value;
+          const name = document.getElementById('cust-name').value;
+          const street = document.getElementById('cust-street').value;
+          const barangay = document.getElementById('cust-barangay').value;
+          const city = document.getElementById('cust-city').value;
+          const province = document.getElementById('cust-province').value;
+
+          const addressStr = `${street}, ${barangay}, ${city}, ${province}`;
+
+          const res = window.RetroStore.placeOrder({
+            fullname: name,
+            address: addressStr,
+            payment_method: selectedPayment
+          });
+
+          if (res.success) {
+            renderOrderSuccess(res.order);
+          }
+        });
+
+        function renderOrderSuccess(order) {
+          mainContainer.innerHTML = `
+            <div class="order-success-banner">
+              <div class="order-success-icon">
+                <i class='bx bx-check'></i>
+              </div>
+              <h1 style="font-size: 2rem; color: #2b9348; margin-bottom: 8px;">Order Placed Successfully!</h1>
+              <p style="font-size: 16px; color: #555; margin-bottom: 1.5rem;">
+                Thank you for your order, <strong>${order.user_name}</strong>.
+              </p>
+
+              <div style="background: #faf9f6; border: 1px solid #e0ded7; border-radius: 8px; padding: 1.5rem; text-align: left; margin-bottom: 2rem;">
+                <div style="display:flex; justify-content: space-between; margin-bottom: 8px;">
+                  <span>Order Number:</span>
+                  <strong>#${order.id}</strong>
+                </div>
+                <div style="display:flex; justify-content: space-between; margin-bottom: 8px;">
+                  <span>Order Date:</span>
+                  <span>${order.order_date}</span>
+                </div>
+                <div style="display:flex; justify-content: space-between; margin-bottom: 8px;">
+                  <span>Payment Method:</span>
+                  <span>${order.payment_method}</span>
+                </div>
+                <div style="display:flex; justify-content: space-between; margin-bottom: 8px;">
+                  <span>Status:</span>
+                  <span style="background: rgba(255, 119, 0, 0.15); color: var(--orange); padding: 2px 8px; border-radius: 4px; font-weight: 600;">
+                    ${order.status}
+                  </span>
+                </div>
+                <div style="display:flex; justify-content: space-between; border-top: 1px solid #ddd; padding-top: 8px; margin-top: 8px; font-size: 16px;">
+                  <span>Total Paid:</span>
+                  <strong style="color: var(--orange);">₱${Number(order.total_amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}</strong>
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                <a href="order_history.html" class="btn" style="background: #333; color: #fff;">
+                  View in Order History
+                </a>
+                <a href="admin_orders.html" class="btn" style="background: var(--orange); color: #fff;">
+                  ⚡ Manage as Admin in Orders Panel
+                </a>
+                <a href="product.html" class="btn" style="background: #eee; color: #333;">
+                  Continue Shopping
+                </a>
+              </div>
+            </div>
+          `;
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="./images/logoretro.png" type="image/x-icon">
+  <title>Admin Reports - The Retro Rack</title>
+  <link rel="stylesheet" href="./css/styles.css">
+  <link rel="stylesheet" href="./css/admin_report.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .report-card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .report-card {
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 8px;
+      border: 1px solid #e0ded7;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    }
+    .report-card h3 {
+      font-size: 1.6rem;
+      color: var(--black);
+      margin-bottom: 4px;
+    }
+    .report-card p {
+      font-size: 13px;
+      color: #777;
+    }
+    .growth-pill {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #e8f5e9;
+      color: #2e7d32;
+      margin-top: 6px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Admin Top Bar -->
+  <header class="top-nav" id="admin-header">
+    <div class="container" style="display:flex; justify-content:space-between; align-items:center;">
+      <div class="welcome">
+        <span id="currentDateTime">Loading clock...</span>
+      </div>
+      <ul class="nav-links" style="display:flex; gap:15px; align-items:center;">
+        <li><a href="index.html" style="color:var(--orange); font-weight:600;"><i class="fas fa-store"></i> Customer Storefront</a></li>
+        <li><a href="#" id="logoutLink"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- Logout Confirmation Modal -->
+  <div id="logoutModal" class="modal">
+    <div class="modal-content">
+      <span class="close-button">&times;</span>
+      <h2>Confirm Logout</h2>
+      <p>Are you sure you want to log out of the admin panel?</p>
+      <div class="modal-buttons">
+        <button id="cancelLogout" class="btn cancel-btn">Cancel</button>
+        <a href="#" id="confirmLogout" class="btn logout-btn">Logout</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Bar -->
+  <nav class="navigation">
+    <div class="nav-center container d-flex">
+      <a href="admin_dashboard.html" class="logo">Retro Rack Shop Admin</a>
+      <ul class="nav-list d-flex">
+        <li class="nav-item"><a href="admin_dashboard.html" class="nav-link">Dashboard</a></li>
+        <li class="nav-item"><a href="admin_products.html" class="nav-link">Products</a></li>
+        <li class="nav-item"><a href="admin_orders.html" class="nav-link">Orders</a></li>
+        <li class="nav-item"><a href="admin_users.html" class="nav-link">Users</a></li>
+        <li class="nav-item"><a href="admin_report.html" class="nav-link active">Reports</a></li>
+        <li class="nav-item"><a href="admin_settings.html" class="nav-link">Settings</a></li>
+      </ul>
+      <div class="hamburger">
+        <i class="fas fa-bars"></i>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <section class="section main-admin">
+    <div class="container">
+      <div class="title" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.5rem; flex-wrap:wrap; gap:10px;">
+        <div>
+          <h1>Financial & Sales Reports</h1>
+          <p style="color:#666; font-size:14px;">Store sales performance analytics and revenue tracking</p>
+        </div>
+        <button onclick="window.print()" class="btn" style="background:#2b2b2b; color:#fff; font-size:13px;">
+          <i class="fas fa-print"></i> Print Statement
+        </button>
+      </div>
+
+      <!-- Summary Cards -->
+      <div class="report-card-grid">
+        <div class="report-card">
+          <p>Delivered Gross Revenue</p>
+          <h3 id="report-sales">₱0.00</h3>
+          <span class="growth-pill"><i class="fas fa-arrow-up"></i> +26.4% vs last mo</span>
+        </div>
+
+        <div class="report-card">
+          <p>Lifetime Completed Orders</p>
+          <h3 id="report-orders">0</h3>
+          <span style="font-size:12px; color:#666;">Fulfillment rate: 94.8%</span>
+        </div>
+
+        <div class="report-card">
+          <p>Registered Customers</p>
+          <h3 id="report-customers">0</h3>
+          <span style="font-size:12px; color:#2e7d32; font-weight:600;">Active community</span>
+        </div>
+
+        <div class="report-card">
+          <p>Average Order Value (AOV)</p>
+          <h3 id="report-aov">₱1,450.00</h3>
+          <span style="font-size:12px; color:#666;">Per transaction</span>
+        </div>
+      </div>
+
+      <!-- Chart -->
+      <div style="background:#fff; padding:2rem; border-radius:8px; border:1px solid #e0ded7; margin-bottom: 2rem;">
+        <h2 style="font-size: 1.3rem; margin-bottom: 1rem;">Revenue Growth Trajectory (Monthly)</h2>
+        <canvas id="reportChart" height="110"></canvas>
+      </div>
+
+      <!-- Recent Completed Sales -->
+      <div style="background:#fff; border-radius:8px; border:1px solid #e0ded7; padding:1.5rem; overflow-x:auto;">
+        <h2 style="font-size: 1.3rem; margin-bottom: 1rem;">Delivered Sales Transactions</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Amount (₱)</th>
+              <th>Payment Method</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="report-sales-body">
+            <!-- Rendered via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scripts -->
+  <script src="./js/retroStore.js"></script>
+  <script src="./js/demoBadge.js"></script>
+  <script src="./js/adminHelper.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      if (!window.RetroStore) return;
+
+      const stats = window.RetroStore.getStats();
+      const orders = window.RetroStore.getOrders();
+      const delivered = orders.filter(o => o.status === 'Delivered');
+
+      document.getElementById('report-sales').textContent = `₱${Number(stats.totalRevenue).toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+      document.getElementById('report-orders').textContent = stats.deliveredOrdersCount;
+      document.getElementById('report-customers').textContent = stats.totalUsers;
+
+      const aov = delivered.length > 0 ? stats.totalRevenue / delivered.length : 1450;
+      document.getElementById('report-aov').textContent = `₱${Number(aov).toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+
+      // Render Sales Table
+      const tbody = document.getElementById('report-sales-body');
+      if (delivered.length > 0) {
+        tbody.innerHTML = delivered.map(o => `
+          <tr>
+            <td><strong>#${o.id}</strong></td>
+            <td>${o.user_name || 'Guest'}</td>
+            <td><strong style="color:#2e7d32;">₱${Number(o.total_amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}</strong></td>
+            <td>${o.payment_method}</td>
+            <td>${o.order_date}</td>
+          </tr>
+        `).join('');
+      } else {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No completed delivered sales.</td></tr>';
+      }
+
+      // Chart
+      const salesData = window.RetroStore.getMonthlySalesData();
+      const ctx = document.getElementById('reportChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: salesData.labels,
+          datasets: [{
+            label: 'Delivered Sales (₱)',
+            data: salesData.data,
+            borderColor: '#ff7700',
+            backgroundColor: 'rgba(255, 119, 0, 0.15)',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.35,
+            pointBackgroundColor: '#ff7700'
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'top' }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: function (val) {
+                  return '₱' + val.toLocaleString();
+                }
+              }
+            }
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>

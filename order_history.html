@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="./images/logoretro.png" type="image/x-icon">
+    <title>Order History - The Retro Rack</title>
+    <!-- Box icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" />
+    <!-- Custom StyleSheet -->
+    <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="stylesheet" href="./css/index.css" />
+    <style>
+      .orders-container {
+        margin: 4rem auto 6rem;
+      }
+      .orders-table-wrapper {
+        overflow-x: auto;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        border: 1px solid #e0ded7;
+      }
+      .orders-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .orders-table th {
+        background: var(--orange);
+        color: #fff;
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+        font-size: 14px;
+      }
+      .orders-table td {
+        padding: 1rem;
+        border-bottom: 1px solid #eaeaea;
+        font-size: 14px;
+        vertical-align: middle;
+      }
+      .status-pill {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 99px;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .status-pending { background: #ffeaa7; color: #d35400; }
+      .status-processing { background: #dfe6e9; color: #2d3436; }
+      .status-shipped { background: #74b9ff; color: #0984e3; }
+      .status-delivered { background: #55efc4; color: #00b894; }
+      .status-cancelled { background: #ff7675; color: #d63031; }
+
+      .view-btn {
+        background: var(--black);
+        color: #fff;
+        padding: 6px 14px;
+        border-radius: 4px;
+        font-size: 13px;
+        cursor: pointer;
+        border: none;
+        transition: background 0.2s;
+      }
+      .view-btn:hover {
+        background: #444;
+      }
+      .modal-item-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+      }
+      .modal-item-row img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Nav -->
+    <div class="top-nav">
+      <div class="container d-flex">
+        <p>Order Online Or Call Us: (+63) 907 343 4119</p>
+        <ul class="d-flex">
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="#" id="adminLink">Admin</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div id="adminLoginModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>Admin Login</h2>
+        <form id="adminLoginForm">
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label for="admin-username" style="display:block; margin-bottom: 5px;">Username</label>
+            <input type="text" id="admin-username" name="username" class="form-input" value="admin" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;" required>
+          </div>
+          <div class="form-group" style="margin-bottom: 15px;">
+            <label for="admin-password" style="display:block; margin-bottom: 5px;">Password</label>
+            <input type="password" id="admin-password" name="password" class="form-input" value="password123" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;" required>
+          </div>
+          <button type="submit" class="btn logout-btn" style="width:100%; margin-bottom: 10px;">Login</button>
+          <button type="button" id="oneClickAdminBtn" class="btn" style="width:100%; background: #ff7700; color: #fff; font-weight: 600;">
+            ⚡ 1-Click Demo Login as Admin
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="header" id="header">
+      <div class="navigation">
+        <div class="nav-center container d-flex">
+          <a href="index.html" class="logo">
+            <h1>The Retro Rack</h1>
+          </a>
+
+          <ul class="nav-list d-flex">
+            <li class="nav-item">
+              <a href="index.html" class="nav-link">Home</a>
+            </li>
+            <li class="nav-item">
+              <a href="product.html" class="nav-link">Shop</a>
+            </li>
+            <li class="nav-item">
+              <a href="terms.html" class="nav-link">Terms</a>
+            </li>
+            <li class="nav-item">
+              <a href="about.html" class="nav-link">About</a>
+            </li>
+            <li class="nav-item">
+              <a href="contact.html" class="nav-link">Contact</a>
+            </li>
+            <li class="nav-item" id="welcome-user-container"></li>
+          </ul>
+
+          <div class="icons d-flex">
+            <a href="loginview.html" class="icon" id="userProfileLink" title="Account / Profile">
+              <i class="bx bx-user"></i>
+            </a>
+
+            <div class="search-container">
+              <a href="#" class="icon" id="searchIcon" title="Search">
+                <i class="bx bx-search"></i>
+              </a>
+              <div class="search-popup" id="searchPopup">
+                <form action="product.html" method="get">
+                  <input type="text" name="search_query" placeholder="Search products..." required>
+                  <button type="submit">Go</button>
+                </form>
+              </div>
+            </div>
+
+            <a href="cart.html" class="icon" title="View Cart">
+              <i class="bx bx-cart"></i>
+              <span id="cart-counter" class="d-flex cart-count">0</span>
+            </a>
+
+            <a href="#" class="icon" id="logoutIcon" title="Logout">
+              <i class="bx bx-log-out"></i>
+            </a>
+          </div>
+
+          <div class="hamburger">
+            <i class="bx bx-menu-alt-left"></i>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Orders Container -->
+    <div class="container orders-container">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.5rem; flex-wrap:wrap; gap:10px;">
+        <div>
+          <h1 style="font-size: 2rem;">Your Order History</h1>
+          <p style="color: #666; font-size: 14px;">Track all recent vintage orders placed with your demo account</p>
+        </div>
+        <div>
+          <a href="admin_orders.html" class="btn" style="background: var(--orange); color: #fff; font-size: 13px;">
+            ⚡ View Admin Orders Portal
+          </a>
+        </div>
+      </div>
+
+      <div id="orders-list-view">
+        <!-- Rendered via JS -->
+      </div>
+    </div>
+
+    <!-- Order Detail Modal -->
+    <div id="orderDetailModal" class="modal">
+      <div class="modal-content" style="max-width: 600px;">
+        <span class="close-button" id="closeDetailModal">&times;</span>
+        <h2 id="modal-order-title" style="margin-bottom: 5px;">Order Details</h2>
+        <div id="modal-order-content">
+          <!-- Injected via JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="row">
+        <div class="col d-flex">
+          <h4>INFORMATION</h4>
+          <a href="about.html">About us</a>
+          <a href="contact.html">Contact Us</a>
+          <a href="terms.html">Terms & Conditions</a>
+          <a href="product.html">Catalog</a>
+        </div>
+        <div class="col d-flex">
+          <h4>CUSTOMER PORTAL</h4>
+          <a href="loginview.html">My Account</a>
+          <a href="cart.html">Shopping Cart</a>
+          <a href="order_history.html">Order History</a>
+          <a href="admin_dashboard.html">Admin Portal</a>
+        </div>
+        <div class="col d-flex">
+          <span><i class='bx bxl-facebook-square'></i></span>
+          <span><i class='bx bxl-instagram-alt'></i></span>
+          <span><i class='bx bxl-github'></i></span>
+          <span><i class='bx bxl-twitter'></i></span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="./js/retroStore.js"></script>
+    <script src="./js/demoBadge.js"></script>
+    <script src="./js/storefront.js"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        if (!window.RetroStore) return;
+
+        const ordersContainer = document.getElementById('orders-list-view');
+        const modal = document.getElementById('orderDetailModal');
+        const closeBtn = document.getElementById('closeDetailModal');
+        const modalContent = document.getElementById('modal-order-content');
+        const modalTitle = document.getElementById('modal-order-title');
+
+        const orders = window.RetroStore.getOrders();
+
+        if (orders.length === 0) {
+          ordersContainer.innerHTML = `
+            <div style="text-align: center; padding: 4rem 1rem; background: #faf9f6; border-radius: 8px;">
+              <i class='bx bx-package' style="font-size: 56px; color: #ccc;"></i>
+              <h2 style="margin: 10px 0;">No Past Orders Yet</h2>
+              <p style="color: #666; margin-bottom: 20px;">Place your first order through the checkout page to see it here.</p>
+              <a href="product.html" class="btn">Start Shopping</a>
+            </div>
+          `;
+          return;
+        }
+
+        function getStatusClass(status) {
+          const s = (status || '').toLowerCase();
+          if (s === 'delivered') return 'status-delivered';
+          if (s === 'shipped') return 'status-shipped';
+          if (s === 'processing') return 'status-processing';
+          if (s === 'cancelled') return 'status-cancelled';
+          return 'status-pending';
+        }
+
+        const rows = orders.map(order => `
+          <tr>
+            <td><strong>#${order.id}</strong></td>
+            <td>${order.order_date}</td>
+            <td><strong>₱${Number(order.total_amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}</strong></td>
+            <td>${order.payment_method}</td>
+            <td>
+              <span class="status-pill ${getStatusClass(order.status)}">
+                ${order.status}
+              </span>
+            </td>
+            <td>
+              <button type="button" class="view-btn view-order-details-btn" data-id="${order.id}">
+                View Details
+              </button>
+            </td>
+          </tr>
+        `).join('');
+
+        ordersContainer.innerHTML = `
+          <div class="orders-table-wrapper">
+            <table class="orders-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Date & Time</th>
+                  <th>Total Amount</th>
+                  <th>Payment</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rows}
+              </tbody>
+            </table>
+          </div>
+        `;
+
+        // Details modal trigger
+        document.querySelectorAll('.view-order-details-btn').forEach(btn => {
+          btn.addEventListener('click', function () {
+            const orderId = this.getAttribute('data-id');
+            const order = window.RetroStore.getOrder(orderId);
+            if (!order) return;
+
+            modalTitle.textContent = `Order #${order.id} Summary`;
+
+            const itemsHtml = (order.items || []).map(item => `
+              <div class="modal-item-row">
+                <img src="${item.image_path || './images/product-1.jpg'}" alt="${item.name}" />
+                <div style="flex:1;">
+                  <strong style="font-size:14px; display:block;">${item.name}</strong>
+                  <span style="font-size:12px; color:#666;">Quantity: ${item.quantity} × ₱${Number(item.price).toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+                </div>
+                <strong>₱${Number(item.price * item.quantity).toLocaleString('en-US', { minimumFractionDigits: 2 })}</strong>
+              </div>
+            `).join('');
+
+            modalContent.innerHTML = `
+              <div style="margin: 12px 0; font-size: 13px; color: #555;">
+                <p><strong>Customer:</strong> ${order.user_name || 'Guest'}</p>
+                <p><strong>Placed On:</strong> ${order.order_date}</p>
+                <p><strong>Delivery Address:</strong> ${order.shipping_address || 'Default Address'}</p>
+                <p><strong>Status:</strong> <span class="status-pill ${getStatusClass(order.status)}">${order.status}</span></p>
+                <p><strong>Payment Method:</strong> ${order.payment_method}</p>
+              </div>
+
+              <h4 style="margin: 15px 0 8px; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Items Ordered</h4>
+              <div style="max-height: 220px; overflow-y: auto;">
+                ${itemsHtml}
+              </div>
+
+              <div style="display:flex; justify-content:space-between; margin-top: 15px; padding-top: 12px; border-top: 2px dashed #ccc; font-size: 16px; font-weight:700;">
+                <span>Total Amount:</span>
+                <span style="color: var(--orange);">₱${Number(order.total_amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+              </div>
+            `;
+
+            modal.style.display = 'block';
+          });
+        });
+
+        closeBtn.addEventListener('click', () => { modal.style.display = 'none'; });
+        window.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
+      });
+    </script>
+  </body>
+</html>

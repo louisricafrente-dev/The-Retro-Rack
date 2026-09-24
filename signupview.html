@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="./images/logoretro.png" type="image/x-icon">
+    <title>Sign Up - The Retro Rack</title>
+    <!-- Box icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" />
+    <!-- Custom StyleSheet -->
+    <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="stylesheet" href="./css/index.css" />
+    <style>
+      .signup-card {
+        max-width: 540px;
+        margin: 4rem auto 6rem;
+        background: #fff;
+        border: 1px solid #e0ded7;
+        border-radius: 12px;
+        padding: 2.5rem;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.04);
+      }
+      .form-group-signup {
+        margin-bottom: 1.2rem;
+      }
+      .form-group-signup label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 5px;
+      }
+      .form-group-signup input, .form-group-signup select {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 14px;
+      }
+      .form-row-2 {
+        display: flex;
+        gap: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Nav -->
+    <div class="top-nav">
+      <div class="container d-flex">
+        <p>Order Online Or Call Us: (+63) 907 343 4119</p>
+        <ul class="d-flex">
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="#" id="adminLink">Admin</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="header" id="header">
+      <div class="navigation">
+        <div class="nav-center container d-flex">
+          <a href="index.html" class="logo">
+            <h1>The Retro Rack</h1>
+          </a>
+
+          <ul class="nav-list d-flex">
+            <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+            <li class="nav-item"><a href="product.html" class="nav-link">Shop</a></li>
+            <li class="nav-item"><a href="terms.html" class="nav-link">Terms</a></li>
+            <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
+            <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+          </ul>
+
+          <div class="icons d-flex">
+            <a href="loginview.html" class="icon"><i class="bx bx-user"></i></a>
+            <a href="cart.html" class="icon"><i class="bx bx-cart"></i><span id="cart-counter" class="d-flex cart-count">0</span></a>
+          </div>
+
+          <div class="hamburger">
+            <i class="bx bx-menu-alt-left"></i>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="signup-card">
+        <h1 style="font-size: 1.8rem; margin-bottom: 6px;">Create Your Account</h1>
+        <p style="color: #666; font-size: 13px; margin-bottom: 1.5rem;">
+          Already registered? <a href="loginview.html" style="color: var(--orange); font-weight: 600;">Log In</a>
+        </p>
+
+        <form id="signup-form">
+          <div class="form-group-signup">
+            <label>Full Name</label>
+            <input type="text" id="su-fullname" placeholder="e.g. Maya Lin" required />
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group-signup" style="flex:1;">
+              <label>Username</label>
+              <input type="text" id="su-username" placeholder="e.g. mayalin" required />
+            </div>
+            <div class="form-group-signup" style="flex:1;">
+              <label>Phone</label>
+              <input type="text" id="su-phone" placeholder="+63 9XX XXX XXXX" required />
+            </div>
+          </div>
+
+          <div class="form-group-signup">
+            <label>Email Address</label>
+            <input type="email" id="su-email" placeholder="e.g. maya@example.com" required />
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group-signup" style="flex:1;">
+              <label>Gender</label>
+              <select id="su-gender">
+                <option value="female">Female</option>
+                <option value="male">Male</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="form-group-signup" style="flex:1;">
+              <label>Date of Birth</label>
+              <input type="date" id="su-dob" value="2001-04-10" required />
+            </div>
+          </div>
+
+          <div class="form-group-signup">
+            <label>Password</label>
+            <input type="password" id="su-pass" placeholder="Create a password" value="password123" required />
+          </div>
+
+          <button type="submit" class="btn" style="width: 100%; padding: 12px; background: var(--orange); color: #fff; font-weight: 600; cursor: pointer; margin-top: 10px;">
+            Register & Continue Shopping
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="row">
+        <div class="col d-flex">
+          <h4>INFORMATION</h4>
+          <a href="about.html">About us</a>
+          <a href="contact.html">Contact Us</a>
+          <a href="terms.html">Terms & Conditions</a>
+          <a href="product.html">Catalog</a>
+        </div>
+        <div class="col d-flex">
+          <h4>CUSTOMER PORTAL</h4>
+          <a href="loginview.html">My Account</a>
+          <a href="cart.html">Shopping Cart</a>
+          <a href="order_history.html">Order History</a>
+          <a href="admin_dashboard.html">Admin Portal</a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="./js/retroStore.js"></script>
+    <script src="./js/demoBadge.js"></script>
+    <script src="./js/storefront.js"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('signup-form').addEventListener('submit', function (e) {
+          e.preventDefault();
+          const name = document.getElementById('su-fullname').value;
+          const uname = document.getElementById('su-username').value;
+          const email = document.getElementById('su-email').value;
+          const phone = document.getElementById('su-phone').value;
+          const gender = document.getElementById('su-gender').value;
+          const dob = document.getElementById('su-dob').value;
+
+          const newCustomer = {
+            id: Date.now(),
+            fullname: name,
+            username: uname,
+            email: email,
+            phone: phone,
+            gender: gender,
+            dob: dob,
+            address: {
+              house_number: "Lot 1",
+              street: "Downtown Ave",
+              barangay: "Poblacion",
+              city: "Manila",
+              province: "Metro Manila",
+              postal_code: "1000"
+            }
+          };
+
+          if (window.RetroStore) {
+            const users = window.RetroStore.getUsers();
+            users.push(newCustomer);
+            window.RetroStore.loginAsCustomer(uname);
+          }
+
+          if (window.showRetroToast) {
+            window.showRetroToast(`Welcome to The Retro Rack, ${name}!`);
+          }
+
+          setTimeout(() => {
+            window.location.href = 'profile.html';
+          }, 800);
+        });
+      });
+    </script>
+  </body>
+</html>

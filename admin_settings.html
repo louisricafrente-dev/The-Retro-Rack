@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="./images/logoretro.png" type="image/x-icon">
+  <title>Admin Settings & Marketing - The Retro Rack</title>
+  <link rel="stylesheet" href="./css/styles.css">
+  <link rel="stylesheet" href="./css/admin_settings.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    .settings-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    @media (max-width: 850px) {
+      .settings-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .settings-card {
+      background: #fff;
+      padding: 1.8rem;
+      border-radius: 8px;
+      border: 1px solid #e0ded7;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+    }
+    .settings-form-group {
+      margin-bottom: 12px;
+    }
+    .settings-form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .settings-form-group input {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Admin Top Bar -->
+  <header class="top-nav" id="admin-header">
+    <div class="container" style="display:flex; justify-content:space-between; align-items:center;">
+      <div class="welcome">
+        <span id="currentDateTime">Loading clock...</span>
+      </div>
+      <ul class="nav-links" style="display:flex; gap:15px; align-items:center;">
+        <li><a href="index.html" style="color:var(--orange); font-weight:600;"><i class="fas fa-store"></i> Customer Storefront</a></li>
+        <li><a href="#" id="logoutLink"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- Logout Confirmation Modal -->
+  <div id="logoutModal" class="modal">
+    <div class="modal-content">
+      <span class="close-button">&times;</span>
+      <h2>Confirm Logout</h2>
+      <p>Are you sure you want to log out of the admin panel?</p>
+      <div class="modal-buttons">
+        <button id="cancelLogout" class="btn cancel-btn">Cancel</button>
+        <a href="#" id="confirmLogout" class="btn logout-btn">Logout</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Bar -->
+  <nav class="navigation">
+    <div class="nav-center container d-flex">
+      <a href="admin_dashboard.html" class="logo">Retro Rack Shop Admin</a>
+      <ul class="nav-list d-flex">
+        <li class="nav-item"><a href="admin_dashboard.html" class="nav-link">Dashboard</a></li>
+        <li class="nav-item"><a href="admin_products.html" class="nav-link">Products</a></li>
+        <li class="nav-item"><a href="admin_orders.html" class="nav-link">Orders</a></li>
+        <li class="nav-item"><a href="admin_users.html" class="nav-link">Users</a></li>
+        <li class="nav-item"><a href="admin_report.html" class="nav-link">Reports</a></li>
+        <li class="nav-item"><a href="admin_settings.html" class="nav-link active">Settings</a></li>
+      </ul>
+      <div class="hamburger">
+        <i class="fas fa-bars"></i>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <section class="section main-admin">
+    <div class="container">
+      <div class="title" style="margin-bottom: 1.5rem;">
+        <h1>Store Marketing & Promotion Settings</h1>
+        <p style="color:#666; font-size:14px;">Create discount promo coupons and manage admin credentials</p>
+      </div>
+
+      <!-- Coupons Section -->
+      <div class="settings-grid">
+        <!-- Coupon Creator -->
+        <div class="settings-card">
+          <h2 style="font-size: 1.25rem; margin-bottom: 1rem; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+            Create Discount Coupon
+          </h2>
+          <form id="createCouponForm">
+            <div class="settings-form-group">
+              <label>Coupon Code</label>
+              <input type="text" id="coupon-code" placeholder="e.g. FLASH25" style="text-transform:uppercase;" required />
+            </div>
+            <div class="settings-form-group">
+              <label>Discount Percentage (%)</label>
+              <input type="number" id="coupon-discount" placeholder="25" min="1" max="100" required />
+            </div>
+            <div class="settings-form-group">
+              <label>Expiry Date</label>
+              <input type="date" id="coupon-expiry" value="2026-12-31" required />
+            </div>
+            <button type="submit" class="btn" style="width:100%; background:var(--orange); color:#fff; font-weight:600; padding:10px; margin-top:5px;">
+              Create Coupon
+            </button>
+          </form>
+        </div>
+
+        <!-- Coupons Table -->
+        <div class="settings-card" style="overflow-x:auto;">
+          <h2 style="font-size: 1.25rem; margin-bottom: 1rem; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+            Active Promo Coupons
+          </h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Discount</th>
+                <th>Expiry</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="coupons-table-body">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Admin Accounts Section -->
+      <div class="settings-card" style="overflow-x:auto;">
+        <h2 style="font-size: 1.25rem; margin-bottom: 1rem; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+          Store Admin Accounts
+        </h2>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Full Name</th>
+              <th>Username</th>
+              <th>Role</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="admins-table-body">
+            <!-- Rendered via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scripts -->
+  <script src="./js/retroStore.js"></script>
+  <script src="./js/demoBadge.js"></script>
+  <script src="./js/adminHelper.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      if (!window.RetroStore) return;
+
+      const couponTbody = document.getElementById('coupons-table-body');
+      const adminTbody = document.getElementById('admins-table-body');
+
+      function renderCoupons() {
+        const coupons = window.RetroStore.getCoupons();
+        if (coupons.length === 0) {
+          couponTbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">No coupons active.</td></tr>';
+          return;
+        }
+
+        couponTbody.innerHTML = coupons.map(c => `
+          <tr>
+            <td><strong style="color:var(--orange); font-size:14px;">${c.code}</strong></td>
+            <td><strong>${c.discount_percentage}% OFF</strong></td>
+            <td>${c.expiry_date}</td>
+            <td>
+              <button class="btn delete-coupon-btn" data-id="${c.id}" style="padding:4px 8px; background:#d63031; color:#fff; border:none; border-radius:4px; font-size:12px; cursor:pointer;">
+                <i class="fas fa-trash"></i> Delete
+              </button>
+            </td>
+          </tr>
+        `).join('');
+
+        document.querySelectorAll('.delete-coupon-btn').forEach(btn => {
+          btn.addEventListener('click', function () {
+            const id = this.getAttribute('data-id');
+            if (confirm('Delete this discount coupon?')) {
+              window.RetroStore.deleteCoupon(id);
+              if (window.showRetroToast) window.showRetroToast('Coupon deleted!');
+              renderCoupons();
+            }
+          });
+        });
+      }
+
+      function renderAdmins() {
+        const admins = window.RetroStore.getAdmins();
+        adminTbody.innerHTML = admins.map(a => `
+          <tr>
+            <td>#A0${a.id}</td>
+            <td><strong>${a.fullname}</strong></td>
+            <td>@${a.username}</td>
+            <td>
+              <span style="background:rgba(255, 119, 0, 0.15); color:var(--orange); padding:2px 8px; border-radius:4px; font-weight:600; font-size:12px;">
+                ${a.role}
+              </span>
+            </td>
+            <td><span style="color:#2b9348; font-weight:bold;"><i class="fas fa-check-circle"></i> Active</span></td>
+          </tr>
+        `).join('');
+      }
+
+      document.getElementById('createCouponForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const code = document.getElementById('coupon-code').value;
+        const discount = document.getElementById('coupon-discount').value;
+        const expiry = document.getElementById('coupon-expiry').value;
+
+        window.RetroStore.addCoupon(code, discount, expiry);
+        if (window.showRetroToast) window.showRetroToast(`Coupon ${code.toUpperCase()} created!`);
+        this.reset();
+        renderCoupons();
+      });
+
+      renderCoupons();
+      renderAdmins();
+    });
+  </script>
+</body>
+</html>

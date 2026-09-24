@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="./images/logoretro.png" type="image/x-icon">
+    <title>Your Shopping Cart - The Retro Rack</title>
+    <!-- Box icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" />
+    <!-- Custom StyleSheet -->
+    <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="stylesheet" href="./css/index.css" />
+    <style>
+      .cart-container {
+        margin: 4rem auto 6rem;
+      }
+      .cart-table-wrapper {
+        overflow-x: auto;
+      }
+      .cart-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .cart-table th {
+        text-align: left;
+        padding: 1rem;
+        color: #fff;
+        background: var(--orange);
+        font-weight: 600;
+      }
+      .cart-table td {
+        padding: 1rem;
+        border-bottom: 1px solid #eaeaea;
+        vertical-align: middle;
+      }
+      .cart-item-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+      .cart-item-info img {
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+      }
+      .qty-control-inline {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .qty-inline-btn {
+        width: 28px;
+        height: 28px;
+        background: #f0eee6;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-weight: bold;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .qty-inline-input {
+        width: 40px;
+        height: 28px;
+        text-align: center;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-weight: 600;
+      }
+      .cart-remove-btn {
+        background: none;
+        border: none;
+        color: #d90429;
+        font-size: 20px;
+        cursor: pointer;
+        transition: color 0.2s;
+      }
+      .cart-remove-btn:hover {
+        color: #9d0208;
+      }
+      .cart-summary-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 2rem;
+        margin-top: 2.5rem;
+      }
+      .coupon-box {
+        flex: 1;
+        min-width: 280px;
+        background: #fdfcf9;
+        border: 1px solid #e5e2d9;
+        padding: 1.5rem;
+        border-radius: 8px;
+      }
+      .coupon-box input {
+        padding: 10px 14px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        width: 60%;
+        margin-right: 8px;
+      }
+      .coupon-hints {
+        margin-top: 10px;
+        font-size: 12px;
+        color: #777;
+      }
+      .coupon-code-badge {
+        background: rgba(255, 119, 0, 0.15);
+        color: var(--orange);
+        padding: 2px 6px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+      .order-totals-card {
+        flex: 1;
+        min-width: 300px;
+        max-width: 420px;
+        background: #faf8f5;
+        border: 1px solid #e0ded7;
+        border-radius: 8px;
+        padding: 1.8rem;
+      }
+      .totals-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        font-size: 14px;
+      }
+      .totals-grand {
+        border-top: 2px dashed #ddd;
+        padding-top: 12px;
+        margin-top: 12px;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--black);
+      }
+      .checkout-cta-btn {
+        display: block;
+        width: 100%;
+        text-align: center;
+        background: var(--orange);
+        color: #fff;
+        padding: 12px;
+        border-radius: 6px;
+        font-weight: 700;
+        text-decoration: none;
+        margin-top: 1.5rem;
+        border: none;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .checkout-cta-btn:hover {
+        background: #e06600;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Nav -->
+    <div class="top-nav">
+      <div class="container d-flex">
+        <p>Order Online Or Call Us: (+63) 907 343 4119</p>
+        <ul class="d-flex">
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="#" id="adminLink">Admin</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div id="adminLoginModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>Admin Login</h2>
+        <form id="adminLoginForm">
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label for="admin-username" style="display:block; margin-bottom: 5px;">Username</label>
+            <input type="text" id="admin-username" name="username" class="form-input" value="admin" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;" required>
+          </div>
+          <div class="form-group" style="margin-bottom: 15px;">
+            <label for="admin-password" style="display:block; margin-bottom: 5px;">Password</label>
+            <input type="password" id="admin-password" name="password" class="form-input" value="password123" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;" required>
+          </div>
+          <button type="submit" class="btn logout-btn" style="width:100%; margin-bottom: 10px;">Login</button>
+          <button type="button" id="oneClickAdminBtn" class="btn" style="width:100%; background: #ff7700; color: #fff; font-weight: 600;">
+            ⚡ 1-Click Demo Login as Admin
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="header" id="header">
+      <div class="navigation">
+        <div class="nav-center container d-flex">
+          <a href="index.html" class="logo">
+            <h1>The Retro Rack</h1>
+          </a>
+
+          <ul class="nav-list d-flex">
+            <li class="nav-item">
+              <a href="index.html" class="nav-link">Home</a>
+            </li>
+            <li class="nav-item">
+              <a href="product.html" class="nav-link">Shop</a>
+            </li>
+            <li class="nav-item">
+              <a href="terms.html" class="nav-link">Terms</a>
+            </li>
+            <li class="nav-item">
+              <a href="about.html" class="nav-link">About</a>
+            </li>
+            <li class="nav-item">
+              <a href="contact.html" class="nav-link">Contact</a>
+            </li>
+            <li class="nav-item" id="welcome-user-container"></li>
+          </ul>
+
+          <div class="icons d-flex">
+            <a href="loginview.html" class="icon" id="userProfileLink" title="Account / Profile">
+              <i class="bx bx-user"></i>
+            </a>
+
+            <div class="search-container">
+              <a href="#" class="icon" id="searchIcon" title="Search">
+                <i class="bx bx-search"></i>
+              </a>
+              <div class="search-popup" id="searchPopup">
+                <form action="product.html" method="get">
+                  <input type="text" name="search_query" placeholder="Search products..." required>
+                  <button type="submit">Go</button>
+                </form>
+              </div>
+            </div>
+
+            <a href="cart.html" class="icon" title="View Cart">
+              <i class="bx bx-cart"></i>
+              <span id="cart-counter" class="d-flex cart-count">0</span>
+            </a>
+
+            <a href="#" class="icon" id="logoutIcon" title="Logout">
+              <i class="bx bx-log-out"></i>
+            </a>
+          </div>
+
+          <div class="hamburger">
+            <i class="bx bx-menu-alt-left"></i>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Cart Content -->
+    <div class="container cart-container">
+      <h1 style="margin-bottom: 1.5rem; font-size: 2rem;">Your Shopping Cart</h1>
+
+      <div id="cart-content-view">
+        <!-- Rendered via JS -->
+      </div>
+    </div>
+
+    <!-- Logout Modal -->
+    <div id="logoutModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>Confirm Logout</h2>
+        <p>Are you sure you want to end your demo session?</p>
+        <div class="modal-buttons" style="margin-top: 15px; display:flex; gap: 10px; justify-content: flex-end;">
+          <button id="cancelLogout" class="btn cancel-btn">Cancel</button>
+          <a href="#" id="confirmLogout" class="btn logout-btn">Logout</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="row">
+        <div class="col d-flex">
+          <h4>INFORMATION</h4>
+          <a href="about.html">About us</a>
+          <a href="contact.html">Contact Us</a>
+          <a href="terms.html">Terms & Conditions</a>
+          <a href="product.html">Catalog</a>
+        </div>
+        <div class="col d-flex">
+          <h4>CUSTOMER PORTAL</h4>
+          <a href="loginview.html">My Account</a>
+          <a href="cart.html">Shopping Cart</a>
+          <a href="order_history.html">Order History</a>
+          <a href="admin_dashboard.html">Admin Portal</a>
+        </div>
+        <div class="col d-flex">
+          <span><i class='bx bxl-facebook-square'></i></span>
+          <span><i class='bx bxl-instagram-alt'></i></span>
+          <span><i class='bx bxl-github'></i></span>
+          <span><i class='bx bxl-twitter'></i></span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="./js/retroStore.js"></script>
+    <script src="./js/demoBadge.js"></script>
+    <script src="./js/storefront.js"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        if (!window.RetroStore) return;
+
+        const cartContainer = document.getElementById('cart-content-view');
+
+        function renderCart() {
+          const items = window.RetroStore.getCart();
+          const totals = window.RetroStore.getCartTotals();
+
+          if (items.length === 0) {
+            cartContainer.innerHTML = `
+              <div style="text-align: center; padding: 4rem 1rem; background: #faf9f6; border-radius: 8px; border: 1px dashed #ccc;">
+                <i class='bx bx-cart' style="font-size: 64px; color: #ccc;"></i>
+                <h2 style="margin: 1rem 0 0.5rem;">Your Cart is Empty</h2>
+                <p style="color: #666; margin-bottom: 1.5rem;">Looks like you haven't added any vintage finds to your cart yet.</p>
+                <a href="product.html" class="btn">Explore Shop</a>
+              </div>
+            `;
+            return;
+          }
+
+          let tableRows = items.map(item => `
+            <tr>
+              <td>
+                <div class="cart-item-info">
+                  <img src="${item.image_path}" alt="${item.name}" />
+                  <div>
+                    <strong style="display:block; color:var(--black); font-size:15px;">${item.name}</strong>
+                    <span style="font-size:13px; color:#888;">Unit Price: ₱${Number(item.price).toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+                  </div>
+                </div>
+              </td>
+              <td>₱${Number(item.price).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+              <td>
+                <div class="qty-control-inline">
+                  <button type="button" class="qty-inline-btn" data-action="minus" data-id="${item.product_id}">−</button>
+                  <input type="text" class="qty-inline-input" value="${item.quantity}" readonly />
+                  <button type="button" class="qty-inline-btn" data-action="plus" data-id="${item.product_id}">+</button>
+                </div>
+              </td>
+              <td><strong>₱${Number(item.price * item.quantity).toLocaleString('en-US', { minimumFractionDigits: 2 })}</strong></td>
+              <td>
+                <button type="button" class="cart-remove-btn" data-id="${item.product_id}" title="Remove item">
+                  <i class='bx bx-trash'></i>
+                </button>
+              </td>
+            </tr>
+          `).join('');
+
+          cartContainer.innerHTML = `
+            <div class="cart-table-wrapper">
+              <table class="cart-table">
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Subtotal</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${tableRows}
+                </tbody>
+              </table>
+            </div>
+
+            <div class="cart-summary-section">
+              <!-- Coupon Area -->
+              <div class="coupon-box">
+                <h3 style="font-size: 16px; margin-bottom: 10px;">Discount Coupon</h3>
+                <p style="font-size: 13px; color: #666; margin-bottom: 12px;">Got a promo code? Enter it below to unlock instant discounts.</p>
+                <div style="display: flex;">
+                  <input type="text" id="coupon-code-input" placeholder="e.g. RETRO20" value="${totals.couponCode || ''}" />
+                  <button type="button" class="btn" id="apply-coupon-btn" style="padding: 10px 18px;">Apply</button>
+                </div>
+                ${totals.couponCode ? `
+                  <div style="margin-top: 10px; color: #2b9348; font-size: 13px; display:flex; align-items:center; gap:6px;">
+                    <i class='bx bx-check-circle'></i> Code <strong>${totals.couponCode}</strong> applied (${totals.discountPercentage}% OFF)!
+                    <a href="#" id="remove-coupon-link" style="color: #d90429; margin-left: 8px; font-size: 12px; text-decoration: underline;">Remove</a>
+                  </div>
+                ` : ''}
+                <div class="coupon-hints">
+                  Try demo coupons: 
+                  <span class="coupon-code-badge" data-code="RETRO20">RETRO20 (20% OFF)</span>
+                  <span class="coupon-code-badge" data-code="WELCOME10">WELCOME10 (10% OFF)</span>
+                </div>
+              </div>
+
+              <!-- Order Totals -->
+              <div class="order-totals-card">
+                <h3 style="font-size: 18px; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">Order Summary</h3>
+                <div class="totals-row">
+                  <span>Cart Subtotal (${totals.itemCount} items):</span>
+                  <span>₱${Number(totals.subtotal).toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+                </div>
+                ${totals.discountAmount > 0 ? `
+                  <div class="totals-row" style="color: #2b9348;">
+                    <span>Discount (${totals.discountPercentage}%):</span>
+                    <span>−₱${Number(totals.discountAmount).toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+                  </div>
+                ` : ''}
+                <div class="totals-row">
+                  <span>Estimated Shipping:</span>
+                  <span>${totals.shipping === 0 ? '<strong style="color: #2b9348;">FREE</strong>' : '₱' + totals.shipping.toFixed(2)}</span>
+                </div>
+                ${totals.shipping > 0 ? `
+                  <div style="font-size: 11px; color: #888; margin-top: -6px; margin-bottom: 8px;">
+                    (Free shipping on orders ₱2,000+)
+                  </div>
+                ` : ''}
+                <div class="totals-row totals-grand">
+                  <span>Grand Total:</span>
+                  <span style="color: var(--orange);">₱${Number(totals.total).toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+                </div>
+
+                <a href="checkout.html" class="checkout-cta-btn">
+                  Proceed to Checkout <i class='bx bx-right-arrow-alt'></i>
+                </a>
+
+                <div style="text-align: center; margin-top: 12px;">
+                  <a href="product.html" style="font-size: 13px; color: #666; text-decoration: underline;">
+                    ← Continue Browsing Shop
+                  </a>
+                </div>
+              </div>
+            </div>
+          `;
+
+          attachCartEventListeners();
+        }
+
+        function attachCartEventListeners() {
+          // Plus / Minus
+          document.querySelectorAll('.qty-inline-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+              const id = this.getAttribute('data-id');
+              const action = this.getAttribute('data-action');
+              const item = window.RetroStore.getCart().find(c => Number(c.product_id) === Number(id));
+              if (item) {
+                const newQty = action === 'plus' ? item.quantity + 1 : item.quantity - 1;
+                window.RetroStore.updateCartQuantity(id, newQty);
+                renderCart();
+              }
+            });
+          });
+
+          // Remove
+          document.querySelectorAll('.cart-remove-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+              const id = this.getAttribute('data-id');
+              window.RetroStore.removeFromCart(id);
+              renderCart();
+            });
+          });
+
+          // Apply Coupon
+          const applyBtn = document.getElementById('apply-coupon-btn');
+          const couponInput = document.getElementById('coupon-code-input');
+          if (applyBtn && couponInput) {
+            applyBtn.addEventListener('click', function () {
+              const code = couponInput.value;
+              const res = window.RetroStore.applyCoupon(code);
+              if (window.showRetroToast) {
+                window.showRetroToast(res.message);
+              }
+              renderCart();
+            });
+          }
+
+          // Coupon Badges click
+          document.querySelectorAll('.coupon-code-badge').forEach(badge => {
+            badge.addEventListener('click', function () {
+              const code = this.getAttribute('data-code');
+              const res = window.RetroStore.applyCoupon(code);
+              if (window.showRetroToast) {
+                window.showRetroToast(res.message);
+              }
+              renderCart();
+            });
+          });
+
+          // Remove coupon link
+          const removeCouponLink = document.getElementById('remove-coupon-link');
+          if (removeCouponLink) {
+            removeCouponLink.addEventListener('click', function (e) {
+              e.preventDefault();
+              window.RetroStore.removeCoupon();
+              renderCart();
+            });
+          }
+        }
+
+        renderCart();
+      });
+    </script>
+  </body>
+</html>

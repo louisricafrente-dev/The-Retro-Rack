@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="./images/logoretro.png" type="image/x-icon">
+  <title>Manage Users - The Retro Rack Admin</title>
+  <link rel="stylesheet" href="./css/styles.css">
+  <link rel="stylesheet" href="./css/admin_users.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+</head>
+<body>
+  <!-- Admin Top Bar -->
+  <header class="top-nav" id="admin-header">
+    <div class="container" style="display:flex; justify-content:space-between; align-items:center;">
+      <div class="welcome">
+        <span id="currentDateTime">Loading clock...</span>
+      </div>
+      <ul class="nav-links" style="display:flex; gap:15px; align-items:center;">
+        <li><a href="index.html" style="color:var(--orange); font-weight:600;"><i class="fas fa-store"></i> Customer Storefront</a></li>
+        <li><a href="#" id="logoutLink"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- Logout Confirmation Modal -->
+  <div id="logoutModal" class="modal">
+    <div class="modal-content">
+      <span class="close-button">&times;</span>
+      <h2>Confirm Logout</h2>
+      <p>Are you sure you want to log out of the admin panel?</p>
+      <div class="modal-buttons">
+        <button id="cancelLogout" class="btn cancel-btn">Cancel</button>
+        <a href="#" id="confirmLogout" class="btn logout-btn">Logout</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Bar -->
+  <nav class="navigation">
+    <div class="nav-center container d-flex">
+      <a href="admin_dashboard.html" class="logo">Retro Rack Shop Admin</a>
+      <ul class="nav-list d-flex">
+        <li class="nav-item"><a href="admin_dashboard.html" class="nav-link">Dashboard</a></li>
+        <li class="nav-item"><a href="admin_products.html" class="nav-link">Products</a></li>
+        <li class="nav-item"><a href="admin_orders.html" class="nav-link">Orders</a></li>
+        <li class="nav-item"><a href="admin_users.html" class="nav-link active">Users</a></li>
+        <li class="nav-item"><a href="admin_report.html" class="nav-link">Reports</a></li>
+        <li class="nav-item"><a href="admin_settings.html" class="nav-link">Settings</a></li>
+      </ul>
+      <div class="hamburger">
+        <i class="fas fa-bars"></i>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <section class="section main-admin">
+    <div class="container">
+      <div class="title" style="margin-bottom: 1.5rem;">
+        <h1>Registered Users & Customers</h1>
+        <p style="color:#666; font-size:14px;">Customer profiles, shipping coordinates, and account directories</p>
+      </div>
+
+      <div class="users-table" style="background:#fff; border-radius:8px; border:1px solid #e0ded7; overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>User ID</th>
+              <th>Full Name</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Gender</th>
+              <th>Birth Date</th>
+              <th>Registered</th>
+            </tr>
+          </thead>
+          <tbody id="users-table-body">
+            <!-- Rendered via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scripts -->
+  <script src="./js/retroStore.js"></script>
+  <script src="./js/demoBadge.js"></script>
+  <script src="./js/adminHelper.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      if (!window.RetroStore) return;
+
+      const tbody = document.getElementById('users-table-body');
+      const users = window.RetroStore.getUsers();
+
+      if (users.length > 0) {
+        tbody.innerHTML = users.map(u => `
+          <tr>
+            <td><strong>#U${String(u.id).padStart(3, '0')}</strong></td>
+            <td><strong>${u.fullname}</strong></td>
+            <td>@${u.username}</td>
+            <td>${u.email}</td>
+            <td>${u.phone}</td>
+            <td style="text-transform:capitalize;">${u.gender}</td>
+            <td>${u.dob}</td>
+            <td>${(u.created_at || '2026-08-01').split(' ')[0]}</td>
+          </tr>
+        `).join('');
+      } else {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">No users registered yet.</td></tr>';
+      }
+    });
+  </script>
+</body>
+</html>
