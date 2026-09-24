@@ -103,6 +103,22 @@
         </button>
       </div>
 
+      <!-- Search & Category Filters Toolbar -->
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:15px; margin-bottom:15px; flex-wrap:wrap;">
+        <div style="display:flex; gap:10px; flex:1; max-width:550px;">
+          <input type="text" id="admin-prod-search" placeholder="Search by name, ID, or description..." style="flex:1; padding:8px 12px; border:1px solid #ccc; border-radius:6px; font-size:14px;" />
+          <select id="admin-prod-filter-cat" style="padding:8px 12px; border:1px solid #ccc; border-radius:6px; font-size:14px; background:#fff;">
+            <option value="All">All Categories</option>
+            <option value="Men's Wear">Men's Wear</option>
+            <option value="Women's Wear">Women's Wear</option>
+            <option value="Accessories">Accessories</option>
+          </select>
+        </div>
+        <div id="product-count-badge" style="font-size:13px; color:#666; font-weight:600;">
+          Showing products
+        </div>
+      </div>
+
       <!-- Inventory Table -->
       <div class="admin-products" style="background:#fff; border-radius:8px; border:1px solid #e0ded7; overflow-x:auto;">
         <table>
@@ -165,6 +181,7 @@
             <option value="./images/product-8.jpg">Retro Runner Sneakers (product-8.jpg)</option>
             <option value="./uploads/Blue_Tshirt_1734462547.jpg">Azure Tee (Uploads)</option>
             <option value="./uploads/Greeny_Polo_1734462617.jpg">Sage Knit Polo (Uploads)</option>
+            <option value="./uploads/Sleeper_Shirt_1734462583.jpg">Signature Camp Shirt (Uploads)</option>
           </select>
         </div>
         <div class="modal-form-group">
@@ -208,6 +225,22 @@
           </div>
         </div>
         <div class="modal-form-group">
+          <label>Product Image</label>
+          <select id="edit-prod-img">
+            <option value="./images/product-1.jpg">Athletic Tee (product-1.jpg)</option>
+            <option value="./images/product-2.jpg">Rose Polo (product-2.jpg)</option>
+            <option value="./images/product-3.jpg">Off-White Camp Shirt (product-3.jpg)</option>
+            <option value="./images/product-4.jpg">Navy Corduroy (product-4.jpg)</option>
+            <option value="./images/product-5.jpg">Mustard Crewneck (product-5.jpg)</option>
+            <option value="./images/product-6.jpg">Teal Windbreaker (product-6.jpg)</option>
+            <option value="./images/product-7.jpg">Indigo Denim (product-7.jpg)</option>
+            <option value="./images/product-8.jpg">Retro Runner Sneakers (product-8.jpg)</option>
+            <option value="./uploads/Blue_Tshirt_1734462547.jpg">Azure Tee (Uploads)</option>
+            <option value="./uploads/Greeny_Polo_1734462617.jpg">Sage Knit Polo (Uploads)</option>
+            <option value="./uploads/Sleeper_Shirt_1734462583.jpg">Signature Camp Shirt (Uploads)</option>
+          </select>
+        </div>
+        <div class="modal-form-group">
           <label>Description</label>
           <textarea id="edit-prod-desc" rows="3"></textarea>
         </div>
@@ -231,8 +264,34 @@
       const addModal = document.getElementById('addProductModal');
       const editModal = document.getElementById('editProductModal');
 
+      const searchInput = document.getElementById('admin-prod-search');
+      const catFilter = document.getElementById('admin-prod-filter-cat');
+      const countBadge = document.getElementById('product-count-badge');
+
       function renderTable() {
-        const products = window.RetroStore.getProducts();
+        const query = (searchInput.value || '').toLowerCase().trim();
+        const cat = catFilter.value;
+
+        let products = window.RetroStore.getProducts();
+
+        if (cat !== 'All') {
+          products = products.filter(p => p.category.toLowerCase() === cat.toLowerCase());
+        }
+
+        if (query) {
+          products = products.filter(p => 
+            p.name.toLowerCase().includes(query) || 
+            String(p.id).includes(query) ||
+            (p.description && p.description.toLowerCase().includes(query))
+          );
+        }
+
+        countBadge.textContent = `Showing ${products.length} product${products.length === 1 ? '' : 's'}`;
+
+        if (products.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:2rem; color:#888;">No vintage products match your search or filter.</td></tr>';
+          return;
+        }
 
         tbody.innerHTML = products.map(p => `
           <tr>
@@ -267,6 +326,9 @@
         attachListeners();
       }
 
+      searchInput.addEventListener('input', renderTable);
+      catFilter.addEventListener('change', renderTable);
+
       function attachListeners() {
         // Edit button
         document.querySelectorAll('.edit-btn').forEach(btn => {
@@ -280,6 +342,7 @@
             document.getElementById('edit-prod-cat').value = p.category;
             document.getElementById('edit-prod-price').value = p.price;
             document.getElementById('edit-prod-stock').value = p.stock;
+            document.getElementById('edit-prod-img').value = p.image_path || './images/product-1.jpg';
             document.getElementById('edit-prod-desc').value = p.description || '';
 
             editModal.style.display = 'block';
@@ -342,10 +405,11 @@
         const cat = document.getElementById('edit-prod-cat').value;
         const price = parseFloat(document.getElementById('edit-prod-price').value);
         const stock = parseInt(document.getElementById('edit-prod-stock').value, 10);
+        const img = document.getElementById('edit-prod-img').value;
         const desc = document.getElementById('edit-prod-desc').value;
 
         window.RetroStore.updateProduct(id, {
-          name, category: cat, price, stock, description: desc
+          name, category: cat, price, stock, image_path: img, description: desc
         });
 
         if (window.showRetroToast) window.showRetroToast(`"${name}" updated successfully!`);

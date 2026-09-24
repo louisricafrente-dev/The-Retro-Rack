@@ -598,9 +598,66 @@
       return false;
     },
 
+    deleteOrder: function (orderId) {
+      let orders = getStored(STORAGE_KEYS.ORDERS, DEFAULT_ORDERS);
+      orders = orders.filter(o => Number(o.id) !== Number(orderId));
+      setStored(STORAGE_KEYS.ORDERS, orders);
+      return true;
+    },
+
     // Users
     getUsers: function () {
       return getStored(STORAGE_KEYS.USERS, DEFAULT_USERS);
+    },
+
+    getUser: function (id) {
+      const users = this.getUsers();
+      return users.find(u => Number(u.id) === Number(id)) || null;
+    },
+
+    addUser: function (userData) {
+      const users = this.getUsers();
+      const newId = users.length > 0 ? Math.max(...users.map(u => Number(u.id))) + 1 : 1;
+      const newUser = {
+        id: newId,
+        fullname: userData.fullname || 'New Customer',
+        username: userData.username || `user_${newId}`,
+        email: userData.email || `user${newId}@example.com`,
+        phone: userData.phone || '+63 900 000 0000',
+        gender: userData.gender || 'male',
+        dob: userData.dob || '2000-01-01',
+        created_at: new Date().toISOString().replace('T', ' ').substring(0, 19),
+        address: userData.address || {
+          house_number: '100',
+          street: 'Market St',
+          barangay: 'Central',
+          city: 'Naga City',
+          province: 'Camarines Sur',
+          postal_code: '4400',
+          country: 'Philippines'
+        }
+      };
+      users.unshift(newUser);
+      setStored(STORAGE_KEYS.USERS, users);
+      return newUser;
+    },
+
+    updateUser: function (id, updates) {
+      const users = this.getUsers();
+      const idx = users.findIndex(u => Number(u.id) === Number(id));
+      if (idx !== -1) {
+        users[idx] = { ...users[idx], ...updates };
+        setStored(STORAGE_KEYS.USERS, users);
+        return users[idx];
+      }
+      return null;
+    },
+
+    deleteUser: function (id) {
+      let users = this.getUsers();
+      users = users.filter(u => Number(u.id) !== Number(id));
+      setStored(STORAGE_KEYS.USERS, users);
+      return true;
     },
 
     // Admins
@@ -608,14 +665,18 @@
       return getStored(STORAGE_KEYS.ADMINS, DEFAULT_ADMINS);
     },
 
-    addAdmin: function (username, role = 'Admin') {
+    addAdmin: function (adminData, role = 'Store Manager') {
       const admins = this.getAdmins();
       const newId = admins.length > 0 ? Math.max(...admins.map(a => a.id)) + 1 : 1;
+      const username = typeof adminData === 'string' ? adminData : (adminData.username || `admin_${newId}`);
+      const fullname = typeof adminData === 'object' && adminData.fullname ? adminData.fullname : (username.charAt(0).toUpperCase() + username.slice(1));
+      const adminRole = typeof adminData === 'object' && adminData.role ? adminData.role : role;
+
       const newAdmin = {
         id: newId,
         username,
-        fullname: username.charAt(0).toUpperCase() + username.slice(1),
-        role,
+        fullname,
+        role: adminRole,
         active: 1
       };
       admins.push(newAdmin);
@@ -625,6 +686,8 @@
 
     deleteAdmin: function (id) {
       let admins = this.getAdmins();
+      // Keep at least 1 super admin
+      if (Number(id) === 1) return false;
       admins = admins.filter(a => Number(a.id) !== Number(id));
       setStored(STORAGE_KEYS.ADMINS, admins);
       return true;

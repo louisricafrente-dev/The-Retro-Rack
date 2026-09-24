@@ -56,9 +56,19 @@
   <!-- Main Content -->
   <section class="section main-admin">
     <div class="container">
-      <div class="title" style="margin-bottom: 1.5rem;">
-        <h1>Registered Users & Customers</h1>
-        <p style="color:#666; font-size:14px;">Customer profiles, shipping coordinates, and account directories</p>
+      <div class="title d-flex" style="justify-content:space-between; align-items:center; margin-bottom: 1.5rem; flex-wrap:wrap; gap:10px;">
+        <div>
+          <h1>Registered Users & Customers</h1>
+          <p style="color:#666; font-size:14px;">Customer profiles, shipping coordinates, and account directories</p>
+        </div>
+        <button id="openAddUserModal" class="btn" style="background:var(--orange); color:#fff; font-weight:600; padding:8px 16px;">
+          <i class="fas fa-user-plus"></i> Add New Customer
+        </button>
+      </div>
+
+      <div style="margin-bottom:15px; display:flex; justify-content:space-between; align-items:center;">
+        <input type="text" id="user-search-input" placeholder="Search customers by name, username, or email..." style="width:350px; padding:8px 12px; border:1px solid #ccc; border-radius:6px; font-size:14px;" />
+        <span id="user-count" style="font-size:13px; color:#666; font-weight:600;"></span>
       </div>
 
       <div class="users-table" style="background:#fff; border-radius:8px; border:1px solid #e0ded7; overflow-x:auto;">
@@ -71,8 +81,9 @@
               <th>Email</th>
               <th>Phone</th>
               <th>Gender</th>
-              <th>Birth Date</th>
+              <th>City / Province</th>
               <th>Registered</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody id="users-table-body">
@@ -82,6 +93,83 @@
       </div>
     </div>
   </section>
+
+  <!-- Add User Modal -->
+  <div id="addUserModal" class="modal">
+    <div class="modal-content" style="max-width: 500px;">
+      <span class="close-button" id="closeAddUserModal">&times;</span>
+      <h2>Add New Customer</h2>
+      <form id="addUserForm">
+        <div class="modal-form-group" style="margin-bottom:12px;">
+          <label style="display:block; font-weight:600; margin-bottom:4px; font-size:13px;">Full Name</label>
+          <input type="text" id="add-user-fullname" placeholder="e.g. Juan dela Cruz" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;" required />
+        </div>
+        <div style="display:flex; gap:10px; margin-bottom:12px;">
+          <div style="flex:1;">
+            <label style="display:block; font-weight:600; margin-bottom:4px; font-size:13px;">Username</label>
+            <input type="text" id="add-user-username" placeholder="juandc" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;" required />
+          </div>
+          <div style="flex:1;">
+            <label style="display:block; font-weight:600; margin-bottom:4px; font-size:13px;">Gender</label>
+            <select id="add-user-gender" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;">
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:flex; gap:10px; margin-bottom:12px;">
+          <div style="flex:1;">
+            <label style="display:block; font-weight:600; margin-bottom:4px; font-size:13px;">Email</label>
+            <input type="email" id="add-user-email" placeholder="juan@gmail.com" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;" required />
+          </div>
+          <div style="flex:1;">
+            <label style="display:block; font-weight:600; margin-bottom:4px; font-size:13px;">Phone</label>
+            <input type="tel" id="add-user-phone" placeholder="+63 912 345 6789" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;" required />
+          </div>
+        </div>
+        <div class="modal-form-group" style="margin-bottom:15px;">
+          <label style="display:block; font-weight:600; margin-bottom:4px; font-size:13px;">City / Province</label>
+          <input type="text" id="add-user-city" placeholder="Naga City, Camarines Sur" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;" required />
+        </div>
+        <button type="submit" class="btn" style="width:100%; background:var(--orange); color:#fff; font-weight:600; padding:10px;">
+          Save Customer
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit User Modal -->
+  <div id="editUserModal" class="modal">
+    <div class="modal-content" style="max-width: 500px;">
+      <span class="close-button" id="closeEditUserModal">&times;</span>
+      <h2>Edit Customer Info</h2>
+      <form id="editUserForm">
+        <input type="hidden" id="edit-user-id" />
+        <div class="modal-form-group" style="margin-bottom:12px;">
+          <label style="display:block; font-weight:600; margin-bottom:4px; font-size:13px;">Full Name</label>
+          <input type="text" id="edit-user-fullname" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;" required />
+        </div>
+        <div style="display:flex; gap:10px; margin-bottom:12px;">
+          <div style="flex:1;">
+            <label style="display:block; font-weight:600; margin-bottom:4px; font-size:13px;">Email</label>
+            <input type="email" id="edit-user-email" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;" required />
+          </div>
+          <div style="flex:1;">
+            <label style="display:block; font-weight:600; margin-bottom:4px; font-size:13px;">Phone</label>
+            <input type="tel" id="edit-user-phone" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;" required />
+          </div>
+        </div>
+        <div class="modal-form-group" style="margin-bottom:15px;">
+          <label style="display:block; font-weight:600; margin-bottom:4px; font-size:13px;">City / Province</label>
+          <input type="text" id="edit-user-city" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;" required />
+        </div>
+        <button type="submit" class="btn" style="width:100%; background:#0984e3; color:#fff; font-weight:600; padding:10px;">
+          Update Customer
+        </button>
+      </form>
+    </div>
+  </div>
 
   <!-- Scripts -->
   <script src="./js/retroStore.js"></script>
@@ -93,24 +181,143 @@
       if (!window.RetroStore) return;
 
       const tbody = document.getElementById('users-table-body');
-      const users = window.RetroStore.getUsers();
+      const searchInput = document.getElementById('user-search-input');
+      const countEl = document.getElementById('user-count');
+      const addModal = document.getElementById('addUserModal');
+      const editModal = document.getElementById('editUserModal');
 
-      if (users.length > 0) {
-        tbody.innerHTML = users.map(u => `
-          <tr>
-            <td><strong>#U${String(u.id).padStart(3, '0')}</strong></td>
-            <td><strong>${u.fullname}</strong></td>
-            <td>@${u.username}</td>
-            <td>${u.email}</td>
-            <td>${u.phone}</td>
-            <td style="text-transform:capitalize;">${u.gender}</td>
-            <td>${u.dob}</td>
-            <td>${(u.created_at || '2026-08-01').split(' ')[0]}</td>
-          </tr>
-        `).join('');
-      } else {
-        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">No users registered yet.</td></tr>';
+      function renderUsers() {
+        const query = (searchInput.value || '').toLowerCase().trim();
+        let users = window.RetroStore.getUsers();
+
+        if (query) {
+          users = users.filter(u => 
+            u.fullname.toLowerCase().includes(query) ||
+            u.username.toLowerCase().includes(query) ||
+            u.email.toLowerCase().includes(query) ||
+            (u.phone && u.phone.includes(query))
+          );
+        }
+
+        countEl.textContent = `Total: ${users.length} customer${users.length === 1 ? '' : 's'}`;
+
+        if (users.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:2rem; color:#888;">No registered customers found.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = users.map(u => {
+          const loc = u.address ? `${u.address.city}, ${u.address.province || ''}` : 'Philippines';
+          return `
+            <tr>
+              <td><strong>#U${String(u.id).padStart(3, '0')}</strong></td>
+              <td><strong>${u.fullname}</strong></td>
+              <td>@${u.username}</td>
+              <td>${u.email}</td>
+              <td>${u.phone}</td>
+              <td style="text-transform:capitalize;">${u.gender || 'unspecified'}</td>
+              <td>${loc}</td>
+              <td>${(u.created_at || '2026-08-01').split(' ')[0]}</td>
+              <td>
+                <div style="display:flex; gap:6px;">
+                  <button class="btn edit-user-btn" data-id="${u.id}" style="padding:4px 8px; font-size:12px; background:#0984e3; color:#fff; border:none; border-radius:4px; cursor:pointer;" title="Edit Customer">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn delete-user-btn" data-id="${u.id}" style="padding:4px 8px; font-size:12px; background:#d63031; color:#fff; border:none; border-radius:4px; cursor:pointer;" title="Delete Customer">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join('');
+
+        attachListeners();
       }
+
+      function attachListeners() {
+        document.querySelectorAll('.edit-user-btn').forEach(btn => {
+          btn.addEventListener('click', function () {
+            const id = this.getAttribute('data-id');
+            const u = window.RetroStore.getUser(id);
+            if (!u) return;
+
+            document.getElementById('edit-user-id').value = u.id;
+            document.getElementById('edit-user-fullname').value = u.fullname;
+            document.getElementById('edit-user-email').value = u.email;
+            document.getElementById('edit-user-phone').value = u.phone;
+            document.getElementById('edit-user-city').value = u.address ? `${u.address.city}, ${u.address.province || ''}` : 'Naga City';
+            editModal.style.display = 'block';
+          });
+        });
+
+        document.querySelectorAll('.delete-user-btn').forEach(btn => {
+          btn.addEventListener('click', function () {
+            const id = this.getAttribute('data-id');
+            const u = window.RetroStore.getUser(id);
+            if (confirm(`Are you sure you want to delete customer "${u ? u.fullname : 'this user'}"?`)) {
+              window.RetroStore.deleteUser(id);
+              if (window.showRetroToast) window.showRetroToast('Customer removed.');
+              renderUsers();
+            }
+          });
+        });
+      }
+
+      searchInput.addEventListener('input', renderUsers);
+
+      document.getElementById('openAddUserModal').addEventListener('click', () => { addModal.style.display = 'block'; });
+      document.getElementById('closeAddUserModal').addEventListener('click', () => { addModal.style.display = 'none'; });
+      document.getElementById('closeEditUserModal').addEventListener('click', () => { editModal.style.display = 'none'; });
+
+      window.addEventListener('click', (e) => {
+        if (e.target === addModal) addModal.style.display = 'none';
+        if (e.target === editModal) editModal.style.display = 'none';
+      });
+
+      document.getElementById('addUserForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const fullname = document.getElementById('add-user-fullname').value;
+        const username = document.getElementById('add-user-username').value;
+        const gender = document.getElementById('add-user-gender').value;
+        const email = document.getElementById('add-user-email').value;
+        const phone = document.getElementById('add-user-phone').value;
+        const city = document.getElementById('add-user-city').value;
+
+        window.RetroStore.addUser({
+          fullname,
+          username,
+          gender,
+          email,
+          phone,
+          address: { city, province: '', country: 'Philippines', house_number: '1', street: 'Main St', barangay: 'Poblacion', postal_code: '4400' }
+        });
+
+        if (window.showRetroToast) window.showRetroToast(`Customer "${fullname}" added!`);
+        addModal.style.display = 'none';
+        this.reset();
+        renderUsers();
+      });
+
+      document.getElementById('editUserForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const id = document.getElementById('edit-user-id').value;
+        const fullname = document.getElementById('edit-user-fullname').value;
+        const email = document.getElementById('edit-user-email').value;
+        const phone = document.getElementById('edit-user-phone').value;
+        const city = document.getElementById('edit-user-city').value;
+
+        window.RetroStore.updateUser(id, {
+          fullname, email, phone,
+          address: { city, province: '', country: 'Philippines' }
+        });
+
+        if (window.showRetroToast) window.showRetroToast(`Customer "${fullname}" updated!`);
+        editModal.style.display = 'none';
+        renderUsers();
+      });
+
+      renderUsers();
     });
   </script>
 </body>
